@@ -54,6 +54,7 @@ export const chapters: Chapter[] = [
     accent: '#ff6fb5',
     tagline: 'The next chapter of Copilot: a connected platform where people and AI collaborate, built for work.',
     points: [
+      { name: 'Copilot Workspaces', status: 'Frontier', note: 'A shared space where teams, their work and Copilot come together' },
       { name: 'Home', note: 'The single starting point for Chat and Cowork' },
       { name: 'Auto', note: 'Picks the right models and effort, optimizing for quality, speed and cost' },
       { name: 'Word, Excel and PowerPoint in Copilot', note: 'Create and collaborate on files alongside your conversation' },
@@ -493,6 +494,47 @@ export const announcements: Announcement[] = [
 
   // ───────────── Microsoft Copilot ─────────────
   {
+    id: 'copilot-workspaces',
+    chapter: 'copilot',
+    source: 'Copilot Workspaces helps teams work together with Copilot',
+    name: 'Copilot Workspaces',
+    title: 'A shared space for teams and Copilot',
+    problem: 'Team context is scattered, and catching up on shared work takes time.',
+    announced: 'Copilot Workspaces, the evolution of Copilot Notebooks, brings teams, their work and Copilot together.',
+    why: 'Teams shift from doing the work to directing it, with humans and agents in one space.',
+    statuses: ['Frontier'],
+    highlight: true,
+    visuals: [
+      {
+        kind: 'flow',
+        title: 'Working in a workspace',
+        steps: [
+          { label: 'Get started', detail: 'Work IQ suggests relevant workspaces from your current workstreams' },
+          { label: 'Work together', detail: 'Shared documents in the Copilot app' },
+          { label: 'Copilot connects the dots', detail: 'What changed, what is unresolved, which actions need attention' },
+          { label: 'Direct the work', detail: 'Coming soon: bring your personal Autopilot into Workspaces' },
+        ],
+      },
+      {
+        kind: 'converge',
+        title: 'From notebook to shared workspace',
+        from: ['Your team', 'Their shared work', 'Copilot', 'Autopilot (coming soon)'],
+        to: { name: 'Copilot Workspaces', status: 'Frontier', note: 'The evolution of Copilot Notebooks' },
+      },
+      {
+        kind: 'grid',
+        title: 'What Copilot surfaces for the team',
+        groups: [
+          { title: 'What changed', items: [{ name: 'Catch up without asking around' }] },
+          { title: 'What is unresolved', items: [{ name: 'Open questions stay visible' }] },
+          { title: 'What needs attention', items: [{ name: 'Actions that keep the work moving' }] },
+        ],
+      },
+    ],
+    links: [{ label: 'Copilot at Ignite blog', url: 'https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/' }],
+    notes: 'This is the Microsoft Copilot headline. Walk it as: start from a suggested workspace, work together, let Copilot connect the dots, then direct the work. Available in the Copilot app through the Frontier program. Bringing Autopilot into Workspaces is "coming soon", not available yet.',
+  },
+  {
     id: 'autopilot',
     chapter: 'copilot',
     source: 'Autopilot is rolling out to Frontier customers',
@@ -553,31 +595,6 @@ export const announcements: Announcement[] = [
     ],
     links: [{ label: 'Tech Community blog', url: 'https://techcommunity.microsoft.com/blog/copilot-managed-runtime-blog/copilot-managed-runtime-is-now-generally-available-with-additional-new-preview-f/4571846' }],
     notes: 'The source labels the runtime GA but does not label Agents and Workflows (the blog title mentions additional preview features). Check the availability of Agents and Workflows before stating it.',
-  },
-  {
-    id: 'copilot-workspaces',
-    chapter: 'copilot',
-    source: 'Copilot Workspaces helps teams work together with Copilot',
-    name: 'Copilot Workspaces',
-    title: 'A shared space for teams and Copilot',
-    problem: 'Team context is scattered, and catching up on shared work takes time.',
-    announced: 'Copilot Workspaces, the evolution of Copilot Notebooks, brings teams, their work and Copilot together.',
-    why: 'Teams shift from doing the work to directing it, with humans and agents in one space.',
-    statuses: ['Frontier'],
-    visuals: [
-      {
-        kind: 'flow',
-        title: 'Working in a workspace',
-        steps: [
-          { label: 'Get started', detail: 'Work IQ suggests relevant workspaces from your current workstreams' },
-          { label: 'Work together', detail: 'Shared documents in the Copilot app' },
-          { label: 'Copilot connects the dots', detail: 'What changed, what is unresolved, which actions need attention' },
-          { label: 'Direct the work', detail: 'Coming soon: bring your personal Autopilot into Workspaces' },
-        ],
-      },
-    ],
-    links: [{ label: 'Copilot at Ignite blog', url: 'https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/' }],
-    notes: 'Available in the Copilot app through the Frontier program. Bringing Autopilot into Workspaces is "coming soon", not available yet.',
   },
   {
     id: 'copilot-code',
