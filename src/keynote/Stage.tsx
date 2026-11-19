@@ -1,3 +1,4 @@
+import { Embers } from './Embers';
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 
 export const STAGE_W = 1920;
@@ -21,6 +22,7 @@ export function Stage({ children, accent }: { children: ReactNode; accent: strin
   return (
     <div className="viewport" ref={ref}>
       <div className="stage" style={{ transform: `translate(-50%, -50%) scale(${scale})`, ['--accent' as string]: accent }}>
+        <Embers />
         {children}
       </div>
     </div>

@@ -10,9 +10,11 @@ export function chapterOf(id?: string) {
 interface Props {
   slide: Slide;
   onStart: (mode: 'a' | 'h') => void;
+  onChapter: (n: number) => void;
+  onAnnouncement: (id: string) => void;
 }
 
-export function SceneView({ slide, onStart }: Props) {
+export function SceneView({ slide, onStart, onChapter, onAnnouncement }: Props) {
   const { scene, step } = slide;
   switch (scene.kind) {
     case 'title':
@@ -32,6 +34,56 @@ export function SceneView({ slide, onStart }: Props) {
           </div>
         </div>
       );
+
+    case 'map':
+      return (
+        <div className="scene scene-map">
+          <p className="kicker kick-line">The map</p>
+          <h1 className="mega map-h">{chapters.length} sections, {announcements.length} announcements</h1>
+          <div className="map-cards">
+            {chapters.map((c, i) => {
+              const items = announcements.filter((a) => a.chapter === c.id);
+              return (
+                <button key={c.id} className="map-card" onClick={() => onChapter(i)} style={{ ['--c' as string]: c.accent, animationDelay: `${150 + i * 90}ms` }}>
+                  <b className="map-n">{String(i + 1).padStart(2, '0')}</b>
+                  <h3>{c.title}</h3>
+                  <p>{items.length} announcement{items.length === 1 ? '' : 's'}</p>
+                  <ul>{items.filter((a) => a.highlight).map((a) => <li key={a.id}>{a.name}</li>)}</ul>
+                  <small>Press <kbd>{i + 1}</kbd> to jump</small>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+
+    case 'highlights': {
+      const hs = announcements.filter((a) => a.highlight);
+      const n = hs.length;
+      const pts = hs.map((a, i) => ({ a, x: 150 + (i * (1620)) / Math.max(n - 1, 1), y: [330, 190, 400, 230, 380, 210, 340][i % 7] }));
+      return (
+        <div className="scene scene-hl">
+          <p className="kicker center">{event.name}</p>
+          <h1 className="mega center">Highlights</h1>
+          <p className="lede center">{n} moments that change how you build, run and secure.</p>
+          <div className="hl-path">
+            <svg viewBox="0 0 1640 520" aria-hidden="true">
+              <polyline points={pts.map((p) => `${p.x - 140},${p.y + 40}`).join(' ')} pathLength={1} />
+            </svg>
+            {pts.map((p, i) => {
+              const c = chapterOf(p.a.chapter);
+              return (
+                <button key={p.a.id} className="hl-node" onClick={() => onAnnouncement(p.a.id)} style={{ left: p.x - 140, top: p.y + 40, ['--c' as string]: c?.accent, animationDelay: `${300 + i * 140}ms` }}>
+                  <i />
+                  <small>{String(i + 1).padStart(2, '0')}</small>
+                  <span>{p.a.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
 
     case 'chapter': {
       const c = scene.chapter;

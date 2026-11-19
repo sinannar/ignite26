@@ -153,11 +153,11 @@ export function MapDialog({ d, onClose, onExplore }: { d: Deck; onClose: () => v
   const isHere = (a: string) => cur.announcementId === a;
 
   const highlightStrip = useMemo(() => {
-    const out: { label: string; index: number }[] = [];
+    const out: { label: string; index: number; color?: string }[] = [];
     let n = 0;
     hi.forEach((s, i) => {
       if (s.step !== 1) return;
-      if (s.scene.kind === 'intro') out.push({ label: `${++n}. ${s.name}`, index: i });
+      if (s.scene.kind === 'intro') out.push({ label: `${++n}. ${s.name}`, index: i, color: chapters.find((c) => c.id === s.chapterId)?.accent });
       else if (s.scene.kind === 'recap') out.push({ label: 'Recap', index: i });
     });
     return out;
@@ -181,10 +181,10 @@ export function MapDialog({ d, onClose, onExplore }: { d: Deck; onClose: () => v
       <div className="map-body">
         <div className="tiles">
           <button onClick={() => goAll(0)}><Icon name="home" size={22} /><b>Home</b></button>
-          <button onClick={() => d.mode !== 'a' ? (d.setMode('a'), onClose()) : onClose()}>
+          <button className={cx(d.mode === 'a' && 'on')} onClick={() => goAll(1)}>
             <Icon name="map" size={22} /><span><b>Announcements</b><small>{chapters.length} sections, all {total}</small></span>
           </button>
-          <button onClick={() => { d.setMode('h'); onClose(); }}>
+          <button className={cx(d.mode === 'h' && 'on')} onClick={() => goHi(1)}>
             <Icon name="spark" size={22} /><span><b>Highlights</b><small>{announcements.filter((a) => a.highlight).length} announcements, the short tour</small></span>
           </button>
           <button onClick={onExplore}>
@@ -192,20 +192,27 @@ export function MapDialog({ d, onClose, onExplore }: { d: Deck; onClose: () => v
           </button>
         </div>
 
-        <div className="cols" style={{ gridTemplateColumns: `repeat(${chapters.length}, minmax(0, 1fr))` }}>
+        <div className="rows">
           {chapters.map((c, ci) => {
             const items = announcements.filter((a) => a.chapter === c.id);
+            const shown = items.filter(visible);
+            if (needle && shown.length === 0) return null;
             return (
-              <section key={c.id} style={{ ['--accent' as string]: c.accent }}>
-                <h3><small>{String(ci + 1).padStart(2, '0')}</small>{c.title}</h3>
+              <section className="row" key={c.id} style={{ ['--accent' as string]: c.accent }}>
+                <div className="row-head">
+                  <small>{String(ci + 1).padStart(2, '0')}</small>
+                  <h3>{c.title}</h3>
+                  <span>{items.length} announcement{items.length === 1 ? '' : 's'}</span>
+                </div>
                 <ul>
-                  {items.map((a) => {
+                  {shown.map((a) => {
                     const p = parts.get(a.id) ?? [];
-                    const show = visible(a);
                     const open = !!a.highlight || isHere(a.id);
                     return (
-                      <li key={a.id} className={cx(!show && 'dim', a.highlight && 'hl', isHere(a.id) && 'cur')} hidden={needle !== '' && !show}>
-                        <button className="m-title" onClick={() => goAll(p[0]?.index ?? 0)}>{a.name}</button>
+                      <li key={a.id} className={cx(a.highlight && 'hl', isHere(a.id) && 'cur')}>
+                        <button className="m-title" onClick={() => goAll(p[0]?.index ?? 0)}>
+                          {a.highlight ? <Icon name="spark" size={14} /> : <i />}{a.name}
+                        </button>
                         {open && (
                           <div className="m-chips">
                             {p.map((x) => (
@@ -231,7 +238,7 @@ export function MapDialog({ d, onClose, onExplore }: { d: Deck; onClose: () => v
         <div className="wrap">
           <h4><Icon name="spark" size={16} /> Highlights</h4>
           <div className="strip">
-            {highlightStrip.map((x) => <button key={x.index} className="m-pill" onClick={() => goHi(x.index)}>{x.label}</button>)}
+            {highlightStrip.map((x) => <button key={x.index} className="m-pill hlp" style={{ ['--accent' as string]: x.color }} onClick={() => goHi(x.index)}>{x.color && <i />}{x.label}</button>)}
           </div>
         </div>
       </div>

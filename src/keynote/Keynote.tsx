@@ -90,7 +90,7 @@ function Main() {
   return (
     <div className="app">
       <Stage accent={accent}>
-        <SceneView key={resetKey} slide={d.slide} onStart={d.start} />
+        <SceneView key={resetKey} slide={d.slide} onStart={d.start} onChapter={d.goToChapter} onAnnouncement={d.goToAnnouncement} />
       </Stage>
 
       {notes && <aside className="notes-pop" aria-label="Presenter notes"><b>Presenter notes</b><p>{d.slide.notes}</p></aside>}

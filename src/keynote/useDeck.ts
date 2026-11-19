@@ -52,10 +52,13 @@ export function useDeck() {
     apply({ mode, index: Math.max(i, 0) });
   }, [apply, slide, timelines]);
 
+  /** Jump to an announcement in the current mode, falling back to the full tour. */
   const goToAnnouncement = useCallback((id: string) => {
-    const i = timelines.a.findIndex((s) => s.announcementId === id);
-    if (i >= 0) apply({ mode: 'a', index: i });
-  }, [apply, timelines]);
+    for (const m of [state.mode, 'a'] as Mode[]) {
+      const i = timelines[m].findIndex((s) => s.announcementId === id);
+      if (i >= 0) { apply({ mode: m, index: i }); return; }
+    }
+  }, [apply, timelines, state.mode]);
 
   const goToChapter = useCallback((n: number) => {
     const c = chapters[n];

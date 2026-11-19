@@ -5,6 +5,8 @@ export type Mode = 'a' | 'h'; // all announcements | highlights
 
 export type Scene =
   | { kind: 'title' }
+  | { kind: 'map' }
+  | { kind: 'highlights' }
   | { kind: 'chapter'; chapter: Chapter }
   | { kind: 'intro'; a: Announcement }
   | { kind: 'visual'; a: Announcement; v: number }
@@ -32,7 +34,7 @@ const VISUAL_SHORT = { flow: 'How it works', grid: 'What’s included', stats: '
 
 function stepsOf(s: Scene): number {
   switch (s.kind) {
-    case 'title': return 1;
+    case 'title': case 'map': case 'highlights': return 1;
     case 'chapter': return 1 + s.chapter.points.length;
     case 'intro': return 2;
     case 'visual': {
@@ -49,6 +51,9 @@ export function buildTimeline(mode: Mode): Slide[] {
   const scenes: Entry[] = [
     { scene: { kind: 'title' }, label: event.name, name: '', part: 'Title', short: 'Title', notes: 'Open on the title. Choose Highlights for a short tour, or All announcements for the full walkthrough.' },
   ];
+  scenes.push(mode === 'a'
+    ? { scene: { kind: 'map' }, label: 'The map', name: '', part: 'The map', short: 'The map', notes: 'Six sections, every announcement. Press 1–6 to jump to a section.' }
+    : { scene: { kind: 'highlights' }, label: 'Highlights', name: '', part: 'Highlights', short: 'Highlights', notes: 'The moments that matter most. Walk them in order.' });
   for (const chapter of chapters) {
     scenes.push({ scene: { kind: 'chapter', chapter }, label: chapter.title, name: '', part: 'Chapter overview', short: 'Chapter', notes: chapter.tagline, chapterId: chapter.id });
     for (const a of announcements.filter((x) => x.chapter === chapter.id && (mode === 'a' || x.highlight))) {
