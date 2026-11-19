@@ -3,6 +3,8 @@ import { announcements, chapters } from '../deck/content';
 import { Chip } from './ui';
 import { SceneView, chapterOf } from './scenes';
 import { Stage } from './Stage';
+import { Presenter } from './Presenter';
+import { useKeys } from './keys';
 import { Bar, MapDialog, Menu, type MenuItem } from './chrome';
 import { useDeck } from './useDeck';
 
@@ -11,26 +13,6 @@ type Dialog = 'map' | 'explore' | 'help' | null;
 export default function Keynote() {
   const presenter = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('presenter') === '1';
   return presenter ? <Presenter /> : <Main />;
-}
-
-function useKeys(d: ReturnType<typeof useDeck>, extra: (e: KeyboardEvent) => boolean | void) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const t = e.target as HTMLElement | null;
-      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA') && e.key !== 'Escape') return;
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (extra(e)) { e.preventDefault(); return; }
-      switch (e.key) {
-        case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter': e.preventDefault(); d.next(); break;
-        case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': e.preventDefault(); d.prev(); break;
-        case 'Home': d.go(0); break;
-        case 'End': d.go(d.last); break;
-        case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': d.goToChapter(Number(e.key) - 1); break;
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  });
 }
 
 function Main() {
@@ -42,9 +24,20 @@ function Main() {
   const [hidden, setHidden] = useState(false);
   const [resetKey, setResetKey] = useState(0);
 
+  // Commands from the presenter view (black screen, reset) arrive on their own channel.
+  useEffect(() => {
+    if (typeof BroadcastChannel === 'undefined') return;
+    const ch = new BroadcastChannel('ignite26-ctl');
+    ch.onmessage = (e: MessageEvent<{ type: 'black'; on: boolean } | { type: 'reset' }>) => {
+      if (e.data.type === 'black') setBlack(e.data.on);
+      else if (e.data.type === 'reset') setResetKey((k) => k + 1);
+    };
+    return () => ch.close();
+  }, []);
+
   const toggle = (name: Exclude<Dialog, null>) => setDialog((v) => (v === name ? null : name));
   const fullscreen = () => { if (document.fullscreenElement) void document.exitFullscreen(); else void document.documentElement.requestFullscreen?.(); };
-  const presenter = () => { window.open(`${window.location.pathname}?presenter=1${window.location.hash}`, 'ignite26-presenter', 'width=1100,height=760'); };
+  const presenter = () => { window.open(`${window.location.pathname}?presenter=1${window.location.hash}`, 'ignite26-presenter'); };
   const toggleMode = () => d.setMode(d.mode === 'h' ? 'a' : 'h');
   const reset = () => { d.go(d.index - (d.slide.step - 1)); setResetKey((k) => k + 1); };
 
@@ -75,7 +68,7 @@ function Main() {
       { icon: 'compass', label: 'Explore all announcements', key: 'O', run: () => setDialog('explore') },
     ],
     [
-      { icon: 'present', label: 'Presenter window', key: 'P', run: presenter },
+      { icon: 'present', label: 'Presenter view', key: 'P', run: presenter },
       { icon: 'notes', label: notes ? 'Hide presenter notes' : 'Show presenter notes', key: 'N', run: () => setNotes((v) => !v) },
       { icon: 'full', label: 'Fullscreen', key: 'F', run: fullscreen },
       { icon: 'black', label: 'Black screen', key: 'B', run: () => setBlack(true) },
@@ -146,7 +139,7 @@ function Help() {
   const rows: [string, string][] = [
     ['→  Space  Enter', 'Next step'], ['←  Backspace', 'Previous step'], ['Home / End', 'First / last slide'],
     ['1 – 6', 'Jump to a chapter'], ['T', 'Highlights / All announcements'], ['M', 'Map of every announcement and scene'],
-    ['O', 'Explore all announcements'], ['P', 'Open the presenter window (notes, next up, timer)'], ['N', 'Show presenter notes on screen'],
+    ['O', 'Explore all announcements'], ['P', 'Open the presenter view in a new tab (notes, previews, timer)'], ['N', 'Show presenter notes on screen'],
     ['F', 'Fullscreen'], ['B', 'Black screen'], ['R', 'Reset this scene to its first step'], ['H', 'Hide / show the controls'], ['?', 'This help'],
   ];
   return (
@@ -154,38 +147,5 @@ function Help() {
       <h2>Keyboard</h2>
       <table className="keys"><tbody>{rows.map(([k, v]) => <tr key={k}><td><kbd>{k}</kbd></td><td>{v}</td></tr>)}</tbody></table>
     </>
-  );
-}
-
-function Presenter() {
-  const d = useDeck();
-  const [started] = useState(() => Date.now());
-  const [, tick] = useState(0);
-  useEffect(() => { const t = setInterval(() => tick((n) => n + 1), 1000); return () => clearInterval(t); }, []);
-  useKeys(d, () => false);
-
-  const secs = Math.floor((Date.now() - started) / 1000);
-  const nextSlide = d.timeline[d.index + 1];
-  const accent = chapterOf(d.slide.chapterId)?.accent ?? '#3b9cff';
-
-  return (
-    <div className="presenter" style={{ ['--accent' as string]: accent }}>
-      <header>
-        <span className="timer">{String(Math.floor(secs / 60)).padStart(2, '0')}:{String(secs % 60).padStart(2, '0')}</span>
-        <span>Slide {d.index + 1} / {d.last + 1} · step {d.slide.step}/{d.slide.steps}</span>
-        <span className="spacer" />
-        <button onClick={d.prev} disabled={d.index === 0}>← Back</button>
-        <button onClick={d.next} disabled={d.index === d.last}>Next →</button>
-      </header>
-      <main>
-        <p className="kicker">Now</p>
-        <h1>{d.slide.label}</h1>
-        <p className="notes">{d.slide.notes}</p>
-      </main>
-      <aside>
-        <p className="kicker">Next up</p>
-        <p>{nextSlide ? nextSlide.label : 'End of deck'}</p>
-      </aside>
-    </div>
   );
 }
