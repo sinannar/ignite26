@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { announcements, chapters } from '../deck/content';
-import { Chip, cx } from './ui';
+import { Chip } from './ui';
 import { SceneView, chapterOf } from './scenes';
 import { Stage } from './Stage';
+import { Bar, MapDialog, Menu, type MenuItem } from './chrome';
 import { useDeck } from './useDeck';
 
-type Dialog = 'explore' | 'help' | null;
+type Dialog = 'map' | 'explore' | 'help' | null;
 
 export default function Keynote() {
   const presenter = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('presenter') === '1';
@@ -15,16 +16,16 @@ export default function Keynote() {
 function useKeys(d: ReturnType<typeof useDeck>, extra: (e: KeyboardEvent) => boolean | void) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA') && e.key !== 'Escape') return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (extra(e)) return;
+      if (extra(e)) { e.preventDefault(); return; }
       switch (e.key) {
         case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter': e.preventDefault(); d.next(); break;
         case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': e.preventDefault(); d.prev(); break;
         case 'Home': d.go(0); break;
         case 'End': d.go(d.last); break;
         case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': d.goToChapter(Number(e.key) - 1); break;
-        case 'h': case 'H': d.setMode('h'); break;
-        case 'a': case 'A': d.setMode('a'); break;
       }
     };
     window.addEventListener('keydown', onKey);
@@ -35,47 +36,72 @@ function useKeys(d: ReturnType<typeof useDeck>, extra: (e: KeyboardEvent) => boo
 function Main() {
   const d = useDeck();
   const [dialog, setDialog] = useState<Dialog>(null);
+  const [menu, setMenu] = useState(false);
+  const [notes, setNotes] = useState(false);
+  const [black, setBlack] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
+
+  const toggle = (name: Exclude<Dialog, null>) => setDialog((v) => (v === name ? null : name));
+  const fullscreen = () => { if (document.fullscreenElement) void document.exitFullscreen(); else void document.documentElement.requestFullscreen?.(); };
+  const presenter = () => { window.open(`${window.location.pathname}?presenter=1${window.location.hash}`, 'ignite26-presenter', 'width=1100,height=760'); };
+  const toggleMode = () => d.setMode(d.mode === 'h' ? 'a' : 'h');
+  const reset = () => { d.go(d.index - (d.slide.step - 1)); setResetKey((k) => k + 1); };
 
   useKeys(d, (e) => {
+    if (black) { if (e.key === 'b' || e.key === 'B' || e.key === 'Escape') setBlack(false); return true; }
     switch (e.key) {
-      case 'g': case 'G': case 'o': case 'O': setDialog((v) => (v === 'explore' ? null : 'explore')); return true;
-      case '?': setDialog((v) => (v === 'help' ? null : 'help')); return true;
-      case 'Escape': setDialog(null); return true;
-      case 'f': case 'F':
-        if (document.fullscreenElement) void document.exitFullscreen();
-        else void document.documentElement.requestFullscreen?.();
-        return true;
-      case 'p': case 'P':
-        window.open(`${window.location.pathname}?presenter=1${window.location.hash}`, 'ignite26-presenter', 'width=1100,height=760');
-        return true;
+      case 'm': case 'M': toggle('map'); return true;
+      case 'o': case 'O': case 'g': case 'G': toggle('explore'); return true;
+      case 't': case 'T': toggleMode(); return true;
+      case '?': toggle('help'); return true;
+      case 'Escape': setDialog(null); setMenu(false); return true;
+      case 'f': case 'F': fullscreen(); return true;
+      case 'p': case 'P': presenter(); return true;
+      case 'n': case 'N': setNotes((v) => !v); return true;
+      case 'b': case 'B': setBlack(true); return true;
+      case 'r': case 'R': reset(); return true;
+      case 'h': case 'H': setHidden((v) => !v); setMenu(false); return true;
     }
     return dialog !== null && ['ArrowRight', 'ArrowLeft', ' ', 'Enter', 'Backspace'].includes(e.key);
   });
 
   const accent = chapterOf(d.slide.chapterId)?.accent ?? '#3b9cff';
-  const pct = (d.index / Math.max(d.last, 1)) * 100;
+  const hl = d.mode === 'h';
+
+  const groups: MenuItem[][] = [
+    [
+      { icon: 'spark', label: hl ? 'All announcements' : 'Highlights', key: 'T', run: toggleMode },
+      { icon: 'compass', label: 'Explore all announcements', key: 'O', run: () => setDialog('explore') },
+    ],
+    [
+      { icon: 'present', label: 'Presenter window', key: 'P', run: presenter },
+      { icon: 'notes', label: notes ? 'Hide presenter notes' : 'Show presenter notes', key: 'N', run: () => setNotes((v) => !v) },
+      { icon: 'full', label: 'Fullscreen', key: 'F', run: fullscreen },
+      { icon: 'black', label: 'Black screen', key: 'B', run: () => setBlack(true) },
+      { icon: 'reset', label: 'Reset this screen', key: 'R', run: reset },
+    ],
+    [
+      { icon: 'keys', label: 'Keys and navigation help', key: '?', run: () => setDialog('help') },
+      { icon: 'hide', label: 'Hide these controls', key: 'H', run: () => setHidden(true) },
+    ],
+  ];
 
   return (
     <div className="app">
       <Stage accent={accent}>
-        <SceneView slide={d.slide} onStart={d.start} />
+        <SceneView key={resetKey} slide={d.slide} onStart={d.start} />
       </Stage>
 
-      <nav className="bar" aria-label="Presentation controls">
-        <button onClick={d.prev} disabled={d.index === 0} aria-label="Previous">←</button>
-        <button onClick={d.next} disabled={d.index === d.last} aria-label="Next">→</button>
-        <div className="bar-track" role="progressbar" aria-valuemin={0} aria-valuemax={d.last} aria-valuenow={d.index}>
-          <div style={{ width: `${pct}%`, background: accent }} />
-        </div>
-        <span className="bar-label">{d.slide.label}</span>
-        <button className={cx(d.mode === 'h' && 'active')} onClick={() => d.setMode(d.mode === 'h' ? 'a' : 'h')} title="Toggle Highlights / All (H / A)">
-          {d.mode === 'h' ? 'Highlights' : 'All'}
-        </button>
-        <button onClick={() => setDialog('explore')}>Explore</button>
-        <button onClick={() => setDialog('help')} aria-label="Help">?</button>
-      </nav>
+      {notes && <aside className="notes-pop" aria-label="Presenter notes"><b>Presenter notes</b><p>{d.slide.notes}</p></aside>}
 
-      {dialog && (
+      {hidden
+        ? <button className="show-controls" onClick={() => setHidden(false)} aria-label="Show controls (H)">Show controls</button>
+        : <Bar d={d} accent={accent} onMap={() => toggle('map')} onMenu={() => setMenu((v) => !v)} menuOpen={menu} />}
+      {menu && !hidden && <Menu groups={groups} onClose={() => setMenu(false)} />}
+
+      {dialog === 'map' && <MapDialog d={d} onClose={() => setDialog(null)} onExplore={() => setDialog('explore')} />}
+      {(dialog === 'explore' || dialog === 'help') && (
         <div className="overlay" onClick={() => setDialog(null)}>
           <div className="dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <button className="close" onClick={() => setDialog(null)} aria-label="Close">✕</button>
@@ -83,6 +109,7 @@ function Main() {
           </div>
         </div>
       )}
+      {black && <div className="black" onClick={() => setBlack(false)} />}
     </div>
   );
 }
@@ -118,8 +145,9 @@ function Explore({ onPick }: { onPick: (id: string) => void }) {
 function Help() {
   const rows: [string, string][] = [
     ['→  Space  Enter', 'Next step'], ['←  Backspace', 'Previous step'], ['Home / End', 'First / last slide'],
-    ['1 – 6', 'Jump to a chapter'], ['H / A', 'Highlights / All announcements'], ['G or O', 'Explore all announcements'],
-    ['P', 'Open the presenter window (notes, next up, timer)'], ['F', 'Fullscreen'], ['?', 'This help'],
+    ['1 – 6', 'Jump to a chapter'], ['T', 'Highlights / All announcements'], ['M', 'Map of every announcement and scene'],
+    ['O', 'Explore all announcements'], ['P', 'Open the presenter window (notes, next up, timer)'], ['N', 'Show presenter notes on screen'],
+    ['F', 'Fullscreen'], ['B', 'Black screen'], ['R', 'Reset this scene to its first step'], ['H', 'Hide / show the controls'], ['?', 'This help'],
   ];
   return (
     <>

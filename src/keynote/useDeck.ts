@@ -63,5 +63,7 @@ export function useDeck() {
     if (i >= 0) go(i);
   }, [go, timeline]);
 
-  return { mode: state.mode, index, last, slide, timeline, go, next, prev, start, setMode, goToAnnouncement, goToChapter };
+  const jump = useCallback((mode: Mode, i: number) => apply({ mode, index: Math.max(i, 0) }), [apply]);
+
+  return { mode: state.mode, index, last, slide, timeline, timelines, jump, go, next, prev, start, setMode, goToAnnouncement, goToChapter };
 }

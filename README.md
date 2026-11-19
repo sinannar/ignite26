@@ -28,9 +28,9 @@ To update after the source changes, follow `.agents/skills/update-presentation/S
 ## Presenting
 
 Pick **Highlights** (the short tour) or **All announcements** on the title slide.
-`→`/`Space` next · `←` back · `1`–`6` jump to a chapter · `H`/`A` switch mode ·
-`G`/`O` Explore (browse everything, with links) · `P` presenter window (notes, next up, timer) ·
-`F` fullscreen · `?` help. Slides deep-link as `#/a/<n>` or `#/h/<n>`.
+`→`/`Space` next · `←` back · `1`–`6` jump to a chapter · `T` Highlights/All ·
+`M` map (search, jump to any scene) · `O` Explore (browse everything, with links) · `P` presenter window (notes, next up, timer) ·
+`N` notes on screen · `F` fullscreen · `B` black screen · `R` reset scene · `H` hide controls · `?` help. Slides deep-link as `#/a/<n>` or `#/h/<n>`.
 
 ## Deploy
 

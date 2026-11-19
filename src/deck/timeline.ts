@@ -17,10 +17,18 @@ export interface Slide {
   step: number;
   steps: number;
   label: string;
+  /** Announcement or chapter name; empty on the title and recap. */
+  name: string;
+  /** What this scene is, e.g. "Why it matters". */
+  part: string;
+  /** Short chip text for the map. */
+  short: string;
   notes: string;
   chapterId?: string;
   announcementId?: string;
 }
+
+const VISUAL_SHORT = { flow: 'How it works', grid: 'What’s included', stats: 'Numbers', converge: 'Brings together' } as const;
 
 function stepsOf(s: Scene): number {
   switch (s.kind) {
@@ -37,19 +45,20 @@ function stepsOf(s: Scene): number {
 }
 
 export function buildTimeline(mode: Mode): Slide[] {
-  const scenes: { scene: Scene; label: string; notes: string; chapterId?: string; announcementId?: string }[] = [
-    { scene: { kind: 'title' }, label: event.name, notes: 'Open on the title. Choose Highlights for a short tour, or All announcements for the full walkthrough.' },
+  type Entry = Omit<Slide, 'step' | 'steps'>;
+  const scenes: Entry[] = [
+    { scene: { kind: 'title' }, label: event.name, name: '', part: 'Title', short: 'Title', notes: 'Open on the title. Choose Highlights for a short tour, or All announcements for the full walkthrough.' },
   ];
   for (const chapter of chapters) {
-    scenes.push({ scene: { kind: 'chapter', chapter }, label: chapter.title, notes: chapter.tagline, chapterId: chapter.id });
+    scenes.push({ scene: { kind: 'chapter', chapter }, label: chapter.title, name: '', part: 'Chapter overview', short: 'Chapter', notes: chapter.tagline, chapterId: chapter.id });
     for (const a of announcements.filter((x) => x.chapter === chapter.id && (mode === 'a' || x.highlight))) {
       const base = { chapterId: chapter.id, announcementId: a.id };
-      scenes.push({ scene: { kind: 'intro', a }, label: `${a.name}: ${a.title}`, notes: a.notes, ...base });
-      a.visuals.forEach((_, v) => scenes.push({ scene: { kind: 'visual', a, v }, label: `${a.name}: ${a.visuals[v].title}`, notes: a.notes, ...base }));
-      scenes.push({ scene: { kind: 'why', a }, label: `${a.name}: why it matters`, notes: a.notes, ...base });
+      scenes.push({ scene: { kind: 'intro', a }, label: `${a.name}: ${a.title}`, name: a.name, part: 'Overview', short: 'Overview', notes: a.notes, ...base });
+      a.visuals.forEach((_, v) => scenes.push({ scene: { kind: 'visual', a, v }, label: `${a.name}: ${a.visuals[v].title}`, name: a.name, part: a.visuals[v].title, short: VISUAL_SHORT[a.visuals[v].kind], notes: a.notes, ...base }));
+      scenes.push({ scene: { kind: 'why', a }, label: `${a.name}: why it matters`, name: a.name, part: 'Why it matters', short: 'Why it matters', notes: a.notes, ...base });
     }
   }
-  scenes.push({ scene: { kind: 'recap' }, label: 'Recap', notes: 'One takeaway per chapter.' });
+  scenes.push({ scene: { kind: 'recap' }, label: 'Recap', name: '', part: 'Takeaways', short: 'Takeaways', notes: 'One takeaway per chapter.' });
 
   return scenes.flatMap((s) => {
     const steps = stepsOf(s.scene);
