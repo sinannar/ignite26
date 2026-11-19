@@ -43,5 +43,5 @@ Press `P` (or ⋯ → Presenter view) to open the presenter view in a new tab: l
 `/speaker/` is a short link to it.
 
 To drive the deck from a phone or tablet, press `D` on the deck to get a code and QR, then open the link on the other device.
-The two browsers connect directly (WebRTC through the free PeerJS broker, no account). Anyone with the code can control the
+The two browsers talk through a free public MQTT relay over WebSocket (no account; only the slide number and a few controls are sent, on a topic derived from the code). Anyone with the code can control the
 deck while it is open, so share it only with your own device, and test the venue network beforehand.

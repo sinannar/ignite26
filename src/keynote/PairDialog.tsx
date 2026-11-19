@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
-import { host, leave, sendPos, useLink } from './link';
+import { formatCode, host, leave, sendPos, useLink } from './link';
 import type { useDeck } from './useDeck';
 
 export function PairDialog({ d, onClose }: { d: ReturnType<typeof useDeck>; onClose: () => void }) {
@@ -34,7 +34,7 @@ export function PairDialog({ d, onClose }: { d: ReturnType<typeof useDeck>; onCl
           <div className="pair-qr">{qr ? <img src={qr} alt="QR code to pair" width={220} height={220} /> : <div className="pair-qr-empty" />}</div>
           <div>
             <small>Code</small>
-            <div className="pair-code">{link.code ?? '······'}</div>
+            <div className="pair-code">{link.code ? formatCode(link.code) : '····-····'}</div>
             <small>Or open</small>
             <p className="pair-url">{url || '…'}</p>
             <p className={`pair-state ${link.state}`}>{stateText}</p>
@@ -44,7 +44,8 @@ export function PairDialog({ d, onClose }: { d: ReturnType<typeof useDeck>; onCl
             </div>
           </div>
         </div>}
-        {on && <p className="pair-note">The link is direct, browser to browser. Anyone with the code can control this deck while it is open, so share it only with your own device. Strict venue Wi-Fi can block it; test once before you go on stage.</p>}
+        {on && /^(localhost|127\.|\[::1\])/.test(window.location.hostname) && <p className="pair-warn">This deck is open on <b>{window.location.host}</b>, an address only this computer can reach. Open the published site (https) on the computer, or the computer's network address, so the QR works on your phone.</p>}
+        {on && <p className="pair-note">It goes through a free public relay (nothing is stored except the slide number). Anyone with the code can control this deck while it is open, so share it only with your own device. Test once on the venue network before you go on stage.</p>}
       </div>
     </div>
   );

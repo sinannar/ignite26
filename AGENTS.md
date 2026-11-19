@@ -13,7 +13,7 @@ a document: one idea per scene, step-by-step reveals, a fixed 1920×1080 stage.
 - `src/deck/types.ts` — content schema. `src/deck/timeline.ts` — turns content into slides and steps.
 - `src/keynote/` — UI: `Keynote.tsx` (modes, dialogs), `Presenter.tsx` (presenter view at `?presenter=1`, opens in a new tab), `chrome.tsx` (bottom bar, menu, map), `scenes.tsx`, `visuals.tsx`, `Stage.tsx`, `useDeck.ts`.
 - `src/pages/speaker.astro` — short URL `/speaker/` that redirects to the presenter view (`/?presenter=1`), which holds the speaker notes.
-- `src/keynote/link.ts`, `PairDialog.tsx` — peer-to-peer (WebRTC via PeerJS) pairing: the deck shows a code/QR (key `D`), a phone or tablet joins in the presenter view and drives the deck.
+- `src/keynote/link.ts`, `PairDialog.tsx` — remote control over a free public MQTT broker (no account, no server of ours; topic derived from the code): the deck shows a code/QR (key `D`, off by default), a phone or tablet joins in the presenter view and drives the deck.
 - `src/styles/global.css` — all styling (stage coordinates are px on 1920×1080).
 - `scripts/validate-deck.ts` — checks content limits, `news/` heading coverage (chapters and sub-chapters) and malformed/empty source links.
 - `.agents/skills/` — agent-agnostic skills. Read the matching `SKILL.md` before the task.

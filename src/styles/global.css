@@ -372,3 +372,5 @@ button.hl-node:hover i { transform: scale(1.35); }
 .pair-switch input::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .2s; }
 .pair-switch input:checked { background: #34c76b; } .pair-switch input:checked::after { transform: translateX(20px); }
 .pair-switch input:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.pair-warn { margin: 14px 0 0; padding: 10px 14px; border-radius: 10px; background: #3a2a10; color: #ffd28a; font-size: 14px; }

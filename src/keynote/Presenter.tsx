@@ -4,7 +4,7 @@ import type { Slide } from '../deck/timeline';
 import { Chip, cx } from './ui';
 import { SceneView, chapterOf } from './scenes';
 import { useKeys } from './keys';
-import { join, leave, sendCtl, useLink } from './link';
+import { formatCode, join, leave, sendCtl, useLink } from './link';
 import { useDeck } from './useDeck';
 
 const noop = () => {};
@@ -105,11 +105,11 @@ export function Presenter() {
         <span className="pv-sp" />
         <span className="pv-link-wrap">
           <button className={cx('pv-pill', link.state === 'connected' && 'ok')} onClick={() => setShowJoin((v) => !v)}>
-            {link.role === 'guest' ? (link.state === 'connected' ? `● Linked ${link.code}` : link.state === 'error' ? 'Link error' : 'Linking…') : '○ Link to deck'}
+            {link.role === 'guest' ? (link.state === 'connected' ? `● Linked ${formatCode(link.code ?? '')}` : link.state === 'error' ? '⚠ Link failed' : `Linking… ${link.via ?? ''}`) : '○ Link to deck'}
           </button>
-          {showJoin && (
+          {(showJoin || (link.role === 'guest' && link.state === 'error')) && (
             <form className="pv-join" onSubmit={(e) => { e.preventDefault(); void join(codeInput); setShowJoin(false); }}>
-              <input autoFocus value={codeInput} onChange={(e) => setCodeInput(e.target.value.toUpperCase())} placeholder="Code from the deck" maxLength={8} aria-label="Pairing code" />
+              <input autoFocus value={codeInput} onChange={(e) => setCodeInput(e.target.value.toUpperCase())} placeholder="XXXX-XXXX" maxLength={9} aria-label="Pairing code" />
               <button type="submit">Connect</button>
               {link.role === 'guest' && <button type="button" onClick={() => { leave(); setShowJoin(false); }}>Disconnect</button>}
               {link.error && <p>{link.error}</p>}
