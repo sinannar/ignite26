@@ -44,7 +44,7 @@ export function Embers() {
         }
         const rise = 1 - Math.max(0, p.y) / H; // 0 at bottom → 1 at top
         const flicker = 0.65 + 0.35 * Math.sin(t / 140 + p.phase * 3);
-        const a = Math.max(0, (1 - rise * 0.9)) * flicker * 1.25;
+        const a = Math.max(0, (1 - rise * 0.9)) * flicker * 0.7;
         const col = COLORS[p.hue];
         const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
         g.addColorStop(0, `rgba(${col},${a})`);
