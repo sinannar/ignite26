@@ -2,7 +2,6 @@ import type { Announcement, Chapter } from './types';
 
 export const event = {
   name: 'Microsoft Ignite 2026',
-  subtitle: 'Azure · Foundry · GitHub',
 };
 
 // Authored from news/*.md. Keep facts faithful to the source; keep wording short.
@@ -48,6 +47,45 @@ export const chapters: Chapter[] = [
       { name: 'Copilot code review', note: 'Local reviews in the CLI and app, secret detection, adaptive effort, cross-repo context, repository insights' },
     ],
     takeaway: 'Build agents, work across tools, ship higher-quality code.',
+  },
+  {
+    id: 'copilot',
+    title: 'Microsoft Copilot',
+    accent: '#ff6fb5',
+    tagline: 'The next chapter of Copilot: a connected platform where people and AI collaborate, built for work.',
+    points: [
+      { name: 'Home', note: 'The single starting point for Chat and Cowork' },
+      { name: 'Auto', note: 'Picks the right models and effort, optimizing for quality, speed and cost' },
+      { name: 'Word, Excel and PowerPoint in Copilot', note: 'Create and collaborate on files alongside your conversation' },
+      { name: 'Copilot Code', note: 'Anyone can build secure apps using natural language' },
+      { name: 'Autopilot', note: 'A persistent, proactive agent for personal productivity' },
+      { name: 'Copilot Managed Runtime', note: 'Securely hosts what you build in Cowork, Code and Copilot Studio' },
+    ],
+    takeaway: 'A connected platform where people and AI collaborate, with context, choice and control.',
+  },
+  {
+    id: 'iq',
+    title: 'Microsoft IQ',
+    accent: '#35d0c8',
+    tagline: 'Microsoft IQ is expanding into a complete enterprise context management platform.',
+    points: [
+      { name: 'Business plugins', note: 'A governed home to reuse skills, tools and agents across teams' },
+      { name: 'Work IQ, Fabric IQ, Foundry IQ and Web IQ', note: 'Connect agents to work, business data, unstructured content and real-world knowledge' },
+      { name: 'Continuous improvement from Microsoft Foundry' },
+    ],
+    takeaway: 'Retain, apply and grow your organization\u2019s own IQ.',
+  },
+  {
+    id: 'security',
+    title: 'Security',
+    accent: '#ff8a4f',
+    tagline: 'As agents move from answering questions to taking action, security becomes the foundation for trust.',
+    points: [
+      { name: 'Microsoft Perception', status: 'GA', note: 'Specialized security agents and playbooks to investigate threats and strengthen defenses' },
+      { name: 'Agent governance and security', note: 'Across Agent 365, Entra, Intune, Defender and Purview: agents, identities, tools, access and data' },
+      { name: 'Codename MDASH', status: 'Preview', note: 'Agentic code security system' },
+    ],
+    takeaway: 'Trust at every layer of the agentic enterprise.',
   },
 ];
 
@@ -391,8 +429,7 @@ export const announcements: Announcement[] = [
     announced: 'A growing first-party MAI family, plus partner models, in Microsoft Foundry.',
     why: 'Evaluate and deploy supported models in the same continuous-improvement workflow used for agents.',
     statuses: ['GA', 'Preview', 'Private preview'],
-    highlight: true,
-    visuals: [
+        visuals: [
       {
         kind: 'grid',
         title: 'New models and choices',
@@ -452,5 +489,320 @@ export const announcements: Announcement[] = [
     ],
     links: [{ label: 'Command Line', url: 'https://commandline.microsoft.com/microsoft-copilot-sdk-2-0-github/' }],
     notes: 'The GitHub chapter intro also mentions the Copilot app (Azure DevOps clone to merge, real-browser testing) and Copilot code review; only the SDK has its own Book of News entry so far.',
+  },
+
+  // ───────────── Microsoft Copilot ─────────────
+  {
+    id: 'autopilot',
+    chapter: 'copilot',
+    source: 'Autopilot is rolling out to Frontier customers',
+    name: 'Autopilot',
+    title: 'A persistent agent for personal productivity',
+    problem: 'Agents wait for the next prompt, while real work keeps going.',
+    announced: 'Autopilot, Microsoft’s first enterprise-grade long-running agent for personal productivity, is rolling out via Frontier.',
+    why: 'Long-running help that stays inside enterprise identity, safety checks and admin control.',
+    statuses: ['Frontier'],
+    highlight: true,
+    visuals: [
+      {
+        kind: 'flow',
+        title: 'How Autopilot works',
+        steps: [
+          { label: 'Lives in your tenant', detail: 'Its own identity, memory and access to tools' },
+          { label: 'Works on its own', detail: 'Follows up on threads, runs recurring work, continues a project' },
+          { label: 'Collaborates', detail: '@mention it in a Teams channel or group chat' },
+          { label: 'Stays governed', detail: 'Actions tied to its own agent ID, safety-checked, manageable by admins' },
+        ],
+      },
+    ],
+    whatsNew: [
+      { name: 'Find it in the Copilot app', note: 'In the left navigation' },
+      { name: 'Rolling out through the Frontier program', status: 'Frontier' },
+    ],
+    links: [
+      { label: 'Copilot at Ignite blog', url: 'https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/' },
+      { label: 'Autopilot', url: 'https://www.microsoft.com/en-us/copilot/features/autopilot' },
+    ],
+    notes: 'Security story: actions are tied to Autopilot’s own agent ID and safety-checked, and admins can see and manage it. Colleagues can @mention a person’s Autopilot to ask for information or request supported actions.',
+  },
+  {
+    id: 'copilot-managed-runtime',
+    chapter: 'copilot',
+    source: 'Copilot Managed Runtime is now generally available, with new capabilities',
+    name: 'Copilot Managed Runtime',
+    title: 'Host what you build, with one way to govern it',
+    problem: 'Apps built in Copilot and in third-party tools need a common way to host, run and govern them.',
+    announced: 'Copilot Managed Runtime is generally available, with an optional Microsoft Fabric data backend.',
+    why: 'Choose the development experience you want and keep one consistent, governed path for running apps in your Microsoft environment.',
+    statuses: ['GA'],
+    visuals: [
+      {
+        kind: 'flow',
+        title: 'From build to governed app',
+        steps: [
+          { label: 'Build', detail: 'Copilot Code, Cowork, Copilot Studio or compatible third-party tools' },
+          { label: 'Publish', detail: 'To Copilot Managed Runtime' },
+          { label: 'Host and govern', detail: 'Microsoft-managed hosting with a common way to run and govern' },
+          { label: 'Optional Fabric backend', detail: 'Database, storage and data APIs, out of the box' },
+        ],
+      },
+    ],
+    whatsNew: [
+      { name: 'Optional Fabric data backend', note: 'For apps that need persistent data or backend capabilities' },
+      { name: 'Agents and Workflows', note: 'Build Copilot Studio agents locally, publish with the CLI, use version control such as GitHub' },
+    ],
+    links: [{ label: 'Tech Community blog', url: 'https://techcommunity.microsoft.com/blog/copilot-managed-runtime-blog/copilot-managed-runtime-is-now-generally-available-with-additional-new-preview-f/4571846' }],
+    notes: 'The source labels the runtime GA but does not label Agents and Workflows (the blog title mentions additional preview features). Check the availability of Agents and Workflows before stating it.',
+  },
+  {
+    id: 'copilot-workspaces',
+    chapter: 'copilot',
+    source: 'Copilot Workspaces helps teams work together with Copilot',
+    name: 'Copilot Workspaces',
+    title: 'A shared space for teams and Copilot',
+    problem: 'Team context is scattered, and catching up on shared work takes time.',
+    announced: 'Copilot Workspaces, the evolution of Copilot Notebooks, brings teams, their work and Copilot together.',
+    why: 'Teams shift from doing the work to directing it, with humans and agents in one space.',
+    statuses: ['Frontier'],
+    visuals: [
+      {
+        kind: 'flow',
+        title: 'Working in a workspace',
+        steps: [
+          { label: 'Get started', detail: 'Work IQ suggests relevant workspaces from your current workstreams' },
+          { label: 'Work together', detail: 'Shared documents in the Copilot app' },
+          { label: 'Copilot connects the dots', detail: 'What changed, what is unresolved, which actions need attention' },
+          { label: 'Direct the work', detail: 'Coming soon: bring your personal Autopilot into Workspaces' },
+        ],
+      },
+    ],
+    links: [{ label: 'Copilot at Ignite blog', url: 'https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/' }],
+    notes: 'Available in the Copilot app through the Frontier program. Bringing Autopilot into Workspaces is "coming soon", not available yet.',
+  },
+  {
+    id: 'copilot-code',
+    chapter: 'copilot',
+    source: 'Easily build secure apps with Copilot Code',
+    name: 'Copilot Code',
+    title: 'Anyone can build secure apps in natural language',
+    problem: 'Teams need dashboards, trackers and small apps, built safely inside their tenant.',
+    announced: 'Copilot Code lets anyone build apps with natural language, using the same agentic technology as GitHub Copilot.',
+    why: 'People build what they need while IT stays in control with Microsoft 365 identity, security and governance.',
+    statuses: ['Frontier'],
+    visuals: [
+      {
+        kind: 'grid',
+        title: 'Build, run safely, stay in control',
+        groups: [
+          {
+            title: 'Build',
+            items: [
+              { name: 'Dashboards, trackers and apps', note: 'Described in natural language' },
+              { name: 'Same agentic technology as GitHub Copilot' },
+            ],
+          },
+          {
+            title: 'Run safely',
+            items: [
+              { name: 'Cloud projects in a secure sandbox', note: 'Stay within your tenant; share internally; iOS and Android' },
+              { name: 'Local sandbox', note: 'Limits what Code can read, write and access on the network' },
+            ],
+          },
+          {
+            title: 'IT in control',
+            items: [
+              { name: 'Publish through Copilot Managed Runtime', note: 'Existing Microsoft 365 identity, security and governance' },
+              { name: 'Managed in the Microsoft 365 admin center' },
+            ],
+          },
+        ],
+      },
+    ],
+    whatsNew: [
+      { name: 'In Frontier on Windows, web, iOS and Android', status: 'Frontier', note: 'Local sandbox on Windows; macOS coming soon' },
+      { name: 'Generally available in December' },
+    ],
+    links: [{ label: 'Copilot at Ignite blog', url: 'https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/' }],
+    notes: 'GA is planned for December; today it is in the Frontier program.',
+  },
+  {
+    id: 'today',
+    chapter: 'copilot',
+    source: 'TODAY helps people prioritize and act on what matters',
+    name: 'TODAY',
+    title: 'Start with what matters, with next steps prepared',
+    problem: 'Staying on top of emails, calendars, chats and meetings takes constant effort.',
+    announced: 'TODAY, a new experience in the Copilot app and Outlook, surfaces priorities and prepares next steps.',
+    why: 'Start the day caught up, with drafts and changes prepared for you to review and approve.',
+    statuses: ['Private preview'],
+    visuals: [
+      {
+        kind: 'flow',
+        title: 'From inbox to action',
+        steps: [
+          { label: 'Gather', detail: 'Emails, calendars, chats and meetings' },
+          { label: 'Prioritize', detail: 'A personalized view of what needs attention' },
+          { label: 'Prepare', detail: 'Email drafts, chat messages and scheduling changes' },
+          { label: 'You approve', detail: 'Review and approve before anything happens' },
+        ],
+      },
+    ],
+    whatsNew: [
+      { name: 'TODAY Brief', note: 'Personalized morning briefing; included with a Microsoft 365 Copilot license' },
+      { name: 'TODAY Feed', note: 'Refreshes through the day; recurring updates require Copilot credits' },
+    ],
+    links: [{ label: 'Copilot at Ignite blog', url: 'https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/' }],
+    notes: 'Rolling out in private preview through the Frontier program. Mention the licensing difference between Brief and Feed.',
+  },
+
+  // ───────────── Microsoft IQ ─────────────
+  {
+    id: 'microsoft-iq',
+    chapter: 'iq',
+    source: 'Introducing Microsoft IQ, the platform for enterprise AI',
+    name: 'Microsoft IQ',
+    title: 'The platform for enterprise AI',
+    problem: 'What your organization learns should carry forward as models, tools and business needs change.',
+    announced: 'Microsoft IQ is generally available: enterprise context management plus continuous improvement in Foundry.',
+    why: 'Retain, apply and grow your own IQ, on products you already use, with no new SKU or subscription.',
+    statuses: ['GA'],
+    highlight: true,
+    visuals: [
+      {
+        kind: 'converge',
+        title: 'Enterprise context management',
+        from: ['Work IQ', 'Fabric IQ', 'Foundry IQ', 'Web IQ'],
+        to: { name: 'Context for every agent', status: 'GA', note: 'Plus reusable business plugins, skills, tools and agents' },
+      },
+      {
+        kind: 'flow',
+        title: 'Continuous improvement in Microsoft Foundry',
+        steps: [
+          { label: 'Connect context', detail: 'Work, business data, unstructured content, the web' },
+          { label: 'Build agents and apps', detail: 'Reuse business plugins, skills and tools' },
+          { label: 'Evaluate', detail: 'Evaluations and production insights' },
+          { label: 'Improve', detail: 'Agent optimization and model training' },
+        ],
+      },
+    ],
+    whatsNew: [
+      { name: 'Business plugins', note: 'Organize context and expertise for each scenario' },
+      { name: 'Together with Microsoft Agent 365', note: 'For governance' },
+    ],
+    links: [{ label: 'Azure blog', url: 'https://azure.microsoft.com/en-us/blog/introducing-the-new-microsoft-iq-putting-your-organizations-intelligence-to-work-in-every-agent/' }],
+    notes: 'Built on products customers already use. Two capabilities: enterprise context management, and continuous improvement in Microsoft Foundry.',
+  },
+  {
+    id: 'foundry-iq',
+    chapter: 'iq',
+    source: 'Foundry IQ brings unstructured data to applications and agents',
+    name: 'Foundry IQ',
+    title: 'Unstructured data, put to work for apps and agents',
+    problem: 'Applications and agents need to find and connect information buried in unstructured content.',
+    announced: 'Foundry IQ combines keyword, vector and hybrid search with agentic retrieval, and adds new capabilities.',
+    why: 'Build search experiences and agents that follow relationships across documents and ground answers in your data.',
+    statuses: ['GA', 'Preview'],
+    visuals: [
+      {
+        kind: 'grid',
+        title: 'What is new',
+        groups: [
+          {
+            title: 'Find',
+            items: [
+              { name: 'SharePoint indexed knowledge source', status: 'GA', note: 'Respects source permissions' },
+              { name: 'Foundry IQ in every new project', status: 'Preview', note: 'Grounding from day 1; usage-based, serverless' },
+            ],
+          },
+          {
+            title: 'Connect',
+            items: [{ name: 'Knowledge graphs', status: 'Preview', note: 'Entities, relationships and topics; trace a regulation to suppliers to affected products' }],
+          },
+          {
+            title: 'Retrieve',
+            items: [{ name: 'Microsoft-Retriever-1', status: 'Preview', note: 'Iterative search and query planning for faster grounding' }],
+          },
+        ],
+      },
+    ],
+    links: [{ label: 'Azure blog', url: 'https://azure.microsoft.com/en-us/blog/introducing-the-new-microsoft-iq-putting-your-organizations-intelligence-to-work-in-every-agent/' }],
+    notes: 'Also mentioned in the Foundry chapter intro as an out-of-the-box enterprise knowledge graph. Topic-based retrieval helps with broader questions, such as themes across a set of contracts.',
+  },
+  {
+    id: 'web-iq',
+    chapter: 'iq',
+    source: 'Web IQ now generally available to Azure customers',
+    name: 'Web IQ',
+    title: 'Fresh web knowledge for every agent',
+    problem: 'Agents need real-world knowledge beyond their models and your business data.',
+    announced: 'Web IQ is generally available to all Azure customers, at a new, lower price.',
+    why: 'Ground agents in fresh, relevant and controllable web knowledge without building the retrieval logic yourself.',
+    statuses: ['GA', 'Private preview'],
+    visuals: [
+      {
+        kind: 'grid',
+        title: 'What is new',
+        groups: [
+          {
+            title: 'Simpler retrieval',
+            items: [
+              { name: 'Auto mode', status: 'GA', note: 'Web, Images, Videos, News, Places and Weather in one call' },
+              { name: 'Auto Advanced', status: 'GA', note: 'Evaluates, refines the query and retrieves more' },
+            ],
+          },
+          {
+            title: 'Control and trust',
+            items: [
+              { name: 'Scopes', status: 'GA', note: 'Include or exclude URLs, domains, sites and paths' },
+              { name: 'Health-aware ranking', status: 'GA', note: 'Credible health sources ahead of forums and blogs' },
+            ],
+          },
+          {
+            title: 'New knowledge',
+            items: [
+              { name: 'Places', status: 'GA', note: '207.5 million real-world entities' },
+              { name: 'Weather', status: 'GA', note: 'Microsoft’s weather intelligence' },
+              { name: 'Commerce', status: 'Private preview', note: 'Product data across 40+ billion listings' },
+            ],
+          },
+        ],
+      },
+    ],
+    links: [{ label: 'Bing blog', url: 'https://blogs.bing.com/webiq/2026/11/web-iq-is-now-broadly-available-build-better-agents-that-keep-up-with-the-world/' }],
+    notes: 'Health-aware ranking uses source credibility signals informed by principles from the National Academy of Medicine (US); it runs on the Web IQ API with no new SKU. Commerce is private preview only.',
+  },
+
+  // ───────────── Security ─────────────
+  {
+    id: 'codename-mdash',
+    chapter: 'security',
+    source: 'Codename MDASH, a new agentic code security system, available in preview',
+    name: 'Codename MDASH',
+    title: 'Agentic code security that works from validated findings',
+    problem: 'Advances in AI models are changing how vulnerabilities are discovered and exploited.',
+    announced: 'Codename MDASH, Microsoft’s agentic code security system, is in preview for eligible organizations.',
+    why: 'Security and engineering teams spend less time triaging and more time on actionable vulnerabilities.',
+    statuses: ['Preview'],
+    highlight: true,
+    visuals: [
+      {
+        kind: 'flow',
+        title: '100+ specialized agents, four stages',
+        steps: [
+          { label: 'Map', detail: 'The attack surface' },
+          { label: 'Scan', detail: 'Code, with specialized AI agents' },
+          { label: 'Validate', detail: 'Findings through agent debate; duplicates removed' },
+          { label: 'Reproduce', detail: 'Where possible, with a triggering input' },
+        ],
+      },
+    ],
+    whatsNew: [
+      { name: 'Quality improvements', note: 'Fewer low-quality results and false positives' },
+      { name: 'Repository sharding', note: 'Large repos split into logical units; fewer tokens per scan' },
+      { name: 'Progress visibility', note: 'Scan stages, completed work, elapsed time, results' },
+      { name: 'Broader MAI Cyber model support', note: 'MAI Cyber 1.1 Flash now; MAI-Cyber-2 after evaluation' },
+    ],
+    links: [{ label: 'Tech Community blog', url: 'https://techcommunity.microsoft.com/blog/perception-blog/whats-new-with-microsoft-perception-at-ignite-2026/4571834' }],
+    notes: 'Available in preview for eligible organizations only. It will use MAI-Cyber-2 once evaluation testing is complete. The Security chapter intro also says Microsoft Perception is generally available; it has no sub-chapter in the source yet.',
   },
 ];

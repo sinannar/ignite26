@@ -9,6 +9,7 @@
   --ga: #46d37a;
   --preview: #ffb84d;
   --private: #b58cff;
+  --frontier: #5ec8ff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
 }
 * { box-sizing: border-box; }
@@ -72,6 +73,7 @@ h4 { font-size: 22px; letter-spacing: .14em; text-transform: uppercase; color: v
 .chip-ga { color: var(--ga); }
 .chip-preview { color: var(--preview); }
 .chip-private-preview { color: var(--private); }
+.chip-frontier { color: var(--frontier); }
 
 /* flow */
 .flow { display: grid; gap: 48px; }
@@ -116,10 +118,10 @@ h4 { font-size: 22px; letter-spacing: .14em; text-transform: uppercase; color: v
 .why-list { background: var(--panel); border: 1px solid var(--line); border-radius: 24px; padding: 36px 40px; }
 
 /* recap */
-.takeaways { display: grid; gap: 30px; }
-.takeaway { display: grid; grid-template-columns: 240px 1fr; align-items: baseline; gap: 36px; }
-.takeaway span { font-size: 40px; font-weight: 700; }
-.takeaway p { margin: 0; font-size: 50px; line-height: 1.2; letter-spacing: -.02em; }
+.takeaways { display: grid; gap: 20px; }
+.takeaway { display: grid; grid-template-columns: 400px 1fr; align-items: baseline; gap: 36px; }
+.takeaway span { font-size: 36px; font-weight: 700; }
+.takeaway p { margin: 0; font-size: 40px; line-height: 1.2; letter-spacing: -.02em; }
 
 /* ---------- chrome ---------- */
 .bar { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--line); }

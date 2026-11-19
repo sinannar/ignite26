@@ -1,4 +1,4 @@
-export type Status = 'GA' | 'Preview' | 'Private preview';
+export type Status = 'GA' | 'Preview' | 'Private preview' | 'Frontier';
 
 /** A single capability, shown with an optional availability chip. */
 export interface Item {

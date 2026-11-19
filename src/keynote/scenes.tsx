@@ -19,7 +19,7 @@ export function SceneView({ slide, onStart }: Props) {
       return (
         <div className="scene scene-title">
           <div className="orbs" aria-hidden><i /><i /><i /></div>
-          <p className="kicker">{event.subtitle}</p>
+          <p className="kicker">{chapters.map((c) => c.title).join(' · ')}</p>
           <h1 className="mega">{event.name}</h1>
           <p className="lede">Every announcement, one idea at a time.</p>
           <div className="start">
@@ -123,7 +123,7 @@ export function SceneView({ slide, onStart }: Props) {
       return (
         <div className="scene scene-recap">
           <p className="kicker">Recap</p>
-          <h1 className="headline">Three takeaways</h1>
+          <h1 className="headline">Takeaways</h1>
           <div className="takeaways">
             {chapters.map((c, i) => (
               <Reveal key={c.id} on={i < step} className="takeaway">

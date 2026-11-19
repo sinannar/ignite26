@@ -15,7 +15,7 @@ The path contains spaces: always quote it (`"news/book of news.md"`). Structure:
 
 | Source | Meaning | Becomes |
 |---|---|---|
-| `# Azure`, `# Foundry`, `# GitHub` | Chapter (3 today). **No** learn-more link. | `chapters[]` entry; `title` must equal the heading |
+| `# Azure`, `# Foundry`, `# GitHub`, `# Microsoft Copilot`, `# Microsoft IQ`, `# Security` | Chapter (6 today, in source order). Normally no learn-more link (Microsoft Copilot's has one; it repeats the sub-chapters' blog link, so ignore it). | `chapters[]` entry; `title` must equal the heading |
 | Paragraphs under a `#` | Chapter intro | `tagline` (one sentence), `points[]` (named items the intro lists, with GA/Preview), `takeaway` |
 | `## Title` | Sub-chapter = one announcement. **Always** has a learn-more link. | `announcements[]` entry; `source` must equal the heading text exactly |
 | First paragraph of a `##` | The headline claim | `announced`, `title` |
@@ -33,6 +33,10 @@ Other `*.md` files under `news/` are also read (ignore files starting with `_`),
 - Availability is sometimes per-product (MAI-Code-2-Flash: GA in GitHub, private preview in Foundry) or ambiguous. Put detail in `note`, or omit the chip, rather than guess.
 - The same item can appear under several headings (Microsoft-Decision-1.1 has its own `##` and a bullet in the Foundry models `##`). Give it one full treatment and a short mention elsewhere.
 - Chapter intros can mention products with no `##` of their own (the GitHub intro names the Copilot app and Copilot code review). Show them in the chapter's `points[]` only; don't invent announcement slides for them.
+- Availability words: "now generally available" → `GA`; "in preview" → `Preview`; "private preview" → `Private preview`;
+  "in/through the Frontier program" with no other label → `Frontier`. Planned dates ("generally available in December", "coming soon") go
+  in a `note` or `whatsNew` item, never in a chip.
+- Chapter intros can state availability for products with no `##` (Security: Microsoft Perception is GA). Use `points[]` for those.
 - Benchmarks and competitor comparisons: quote only what the source states, name the index, and note the source in `footnote`/`notes`.
 
 ## Workflow
@@ -47,7 +51,7 @@ Other `*.md` files under `news/` are also read (ignore files starting with `_`),
    `src/deck/types.ts`):
    - `name` (product), `title` (headline claim, ≤ 60 chars),
    - `problem` (≤ 110), `announced` (≤ 120), `why` (≤ 130): one sentence each,
-   - `statuses` and per-item `status`: `GA`, `Preview` or `Private preview`, only
+   - `statuses` and per-item `status`: `GA`, `Preview`, `Private preview` or `Frontier`, only
      as the source states,
    - `visuals`: pick the right shape (below), `whatsNew` (≤ 5 short items) when the
      visual doesn't already list everything,
@@ -77,6 +81,6 @@ An announcement may have several visuals; each becomes its own scene and each re
 - Never invent announcements, availability, dates, numbers or comparisons. Everything on a slide
   must be traceable to the source text. If the source is ambiguous, leave the chip off and note it.
 - Keep wording short and plain; no marketing filler. A slide should be readable from the back of a room.
-- Use `Preview` vs `GA` exactly as the source says ("now generally available" / "in preview").
+- Use `Preview` vs `GA` vs `Frontier` exactly as the source says; see the availability rules above.
 - Do not hand-edit `dist/` or `.astro/`. Do not change the UI code for a content change.
 - To reorder, move entries in `content.ts`; to drop an item, delete its entry (and keep the source in `news/`).

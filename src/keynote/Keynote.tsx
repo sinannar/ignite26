@@ -22,7 +22,7 @@ function useKeys(d: ReturnType<typeof useDeck>, extra: (e: KeyboardEvent) => boo
         case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': e.preventDefault(); d.prev(); break;
         case 'Home': d.go(0); break;
         case 'End': d.go(d.last); break;
-        case '1': case '2': case '3': d.goToChapter(Number(e.key) - 1); break;
+        case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': d.goToChapter(Number(e.key) - 1); break;
         case 'h': case 'H': d.setMode('h'); break;
         case 'a': case 'A': d.setMode('a'); break;
       }
@@ -118,7 +118,7 @@ function Explore({ onPick }: { onPick: (id: string) => void }) {
 function Help() {
   const rows: [string, string][] = [
     ['→  Space  Enter', 'Next step'], ['←  Backspace', 'Previous step'], ['Home / End', 'First / last slide'],
-    ['1 2 3', 'Jump to a chapter'], ['H / A', 'Highlights / All announcements'], ['G or O', 'Explore all announcements'],
+    ['1 – 6', 'Jump to a chapter'], ['H / A', 'Highlights / All announcements'], ['G or O', 'Explore all announcements'],
     ['P', 'Open the presenter window (notes, next up, timer)'], ['F', 'Fullscreen'], ['?', 'This help'],
   ];
   return (
