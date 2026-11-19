@@ -190,6 +190,9 @@ export function MapDialog({ d, onClose, onExplore }: { d: Deck; onClose: () => v
           <button onClick={onExplore}>
             <Icon name="compass" size={22} /><span><b>Explore</b><small>Browse cards for all {total}</small></span>
           </button>
+          <button onClick={() => { window.location.href = `${import.meta.env.BASE_URL}speaker/`; }}>
+            <Icon name="notes" size={22} /><span><b>Speaker notes</b><small>Phone-friendly notes page</small></span>
+          </button>
         </div>
 
         <div className="rows">

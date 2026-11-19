@@ -36,3 +36,7 @@ Pick **Highlights** (the short tour) or **All announcements** on the title slide
 
 Set the repository's Pages source to **GitHub Actions**. Pushes to `main` build
 and publish via `.github/workflows/deploy.yml`; pull requests only build.
+
+## Speaker notes
+
+Open `/speaker/` (for example `https://<user>.github.io/<repo>/speaker/`) on a phone or tablet. It is generated from `src/deck/content.ts`, is not linked from the deck and is marked `noindex`. That makes it unlisted, not private, so keep nothing sensitive in the notes. It follows the stage live only when open in the same browser as the deck; on another device, use the section chips, search and "Mark covered".

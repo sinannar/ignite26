@@ -12,6 +12,7 @@ a document: one idea per scene, step-by-step reveals, a fixed 1920×1080 stage.
 - `src/deck/content.ts` — **authored deck content**: chapters, announcements, visuals, notes.
 - `src/deck/types.ts` — content schema. `src/deck/timeline.ts` — turns content into slides and steps.
 - `src/keynote/` — UI: `Keynote.tsx` (modes, dialogs, presenter), `scenes.tsx`, `visuals.tsx`, `Stage.tsx`, `useDeck.ts`.
+- `src/pages/speaker.astro` + `src/speaker/` — unlisted, phone-friendly speaker notes at `/speaker/`, generated from `content.ts` (no separate content to maintain). Styled by `src/styles/speaker.css`; `noindex`, not linked from the deck.
 - `src/styles/global.css` — all styling (stage coordinates are px on 1920×1080).
 - `scripts/validate-deck.ts` — checks content limits, `news/` heading coverage (chapters and sub-chapters) and malformed/empty source links.
 - `.agents/skills/` — agent-agnostic skills. Read the matching `SKILL.md` before the task.
