@@ -24,6 +24,7 @@ const PATHS: Record<string, string> = {
   search: 'M11 18a7 7 0 100-14 7 7 0 000 14zM21 21l-5-5',
   pin: 'M12 21s-6-5.3-6-10a6 6 0 1112 0c0 4.7-6 10-6 10zM12 12a2 2 0 100-4 2 2 0 000 4z',
   close: 'M5 5l14 14M19 5L5 19',
+  link: 'M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1',
 };
 
 export function Icon({ name, size = 18 }: { name: keyof typeof PATHS; size?: number }) {
@@ -190,8 +191,8 @@ export function MapDialog({ d, onClose, onExplore }: { d: Deck; onClose: () => v
           <button onClick={onExplore}>
             <Icon name="compass" size={22} /><span><b>Explore</b><small>Browse cards for all {total}</small></span>
           </button>
-          <button onClick={() => { window.location.href = `${import.meta.env.BASE_URL}speaker/`; }}>
-            <Icon name="notes" size={22} /><span><b>Speaker notes</b><small>Phone-friendly notes page</small></span>
+          <button onClick={() => { window.open(`${import.meta.env.BASE_URL}?presenter=1${window.location.hash}`, 'ignite26-presenter'); }}>
+            <Icon name="notes" size={22} /><span><b>Presenter view</b><small>Notes, previews and timer in a new tab</small></span>
           </button>
         </div>
 

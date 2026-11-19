@@ -4,20 +4,10 @@ import type { Slide } from '../deck/timeline';
 import { Chip, cx } from './ui';
 import { SceneView, chapterOf } from './scenes';
 import { useKeys } from './keys';
+import { join, leave, sendCtl, useLink } from './link';
 import { useDeck } from './useDeck';
 
 const noop = () => {};
-
-/** Send a command to the keynote window (black screen, scene reset). */
-function usePresenterCtl() {
-  const ch = useRef<BroadcastChannel | null>(null);
-  useEffect(() => {
-    if (typeof BroadcastChannel === 'undefined') return;
-    ch.current = new BroadcastChannel('ignite26-ctl');
-    return () => ch.current?.close();
-  }, []);
-  return (msg: { type: 'black'; on: boolean } | { type: 'reset' }) => ch.current?.postMessage(msg);
-}
 
 /** A live, scaled-down render of a slide. */
 function Thumb({ slide, accent }: { slide: Slide | undefined; accent: string }) {
@@ -72,7 +62,11 @@ export function Presenter() {
   const [tab, setTab] = useState<'notes' | 'map'>('notes');
   const [black, setBlack] = useState(false);
   const [goto, setGoto] = useState('');
-  const send = usePresenterCtl();
+  const send = sendCtl;
+  const link = useLink();
+  const [codeInput, setCodeInput] = useState('');
+  const [showJoin, setShowJoin] = useState(false);
+  useEffect(() => { const c = new URLSearchParams(window.location.search).get('join'); if (c) void join(c); }, []);
   const toggleBlack = () => { send({ type: 'black', on: !black }); setBlack(!black); };
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t); }, []);
   useKeys(d, (e) => {
@@ -109,6 +103,20 @@ export function Presenter() {
           <b>{s.name ? `${s.name} · ${s.part}` : s.part}</b> <span className="pv-count">{d.index + 1} of {d.last + 1}</span>
         </span>
         <span className="pv-sp" />
+        <span className="pv-link-wrap">
+          <button className={cx('pv-pill', link.state === 'connected' && 'ok')} onClick={() => setShowJoin((v) => !v)}>
+            {link.role === 'guest' ? (link.state === 'connected' ? `● Linked ${link.code}` : link.state === 'error' ? 'Link error' : 'Linking…') : '○ Link to deck'}
+          </button>
+          {showJoin && (
+            <form className="pv-join" onSubmit={(e) => { e.preventDefault(); void join(codeInput); setShowJoin(false); }}>
+              <input autoFocus value={codeInput} onChange={(e) => setCodeInput(e.target.value.toUpperCase())} placeholder="Code from the deck" maxLength={8} aria-label="Pairing code" />
+              <button type="submit">Connect</button>
+              {link.role === 'guest' && <button type="button" onClick={() => { leave(); setShowJoin(false); }}>Disconnect</button>}
+              {link.error && <p>{link.error}</p>}
+              <p className="pv-hint">On the deck press <kbd>D</kbd> to get a code or QR. Works over the internet, no account needed.</p>
+            </form>
+          )}
+        </span>
         <span className="pv-elapsed">Elapsed <b>{pad(Math.floor(secs / 60))}:{pad(secs % 60)}</b></span>
         <button onClick={() => setStarted(Date.now())}>Restart timer</button>
         <span className="pv-clock">{clock}</span>

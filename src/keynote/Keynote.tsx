@@ -3,12 +3,14 @@ import { announcements, chapters } from '../deck/content';
 import { Chip } from './ui';
 import { SceneView, chapterOf } from './scenes';
 import { Stage } from './Stage';
+import { onCtl, useLink } from './link';
+import { PairDialog } from './PairDialog';
 import { Presenter } from './Presenter';
 import { useKeys } from './keys';
 import { Bar, MapDialog, Menu, type MenuItem } from './chrome';
 import { useDeck } from './useDeck';
 
-type Dialog = 'map' | 'explore' | 'help' | null;
+type Dialog = 'map' | 'explore' | 'help' | 'pair' | null;
 
 export default function Keynote() {
   const presenter = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('presenter') === '1';
@@ -23,17 +25,10 @@ function Main() {
   const [black, setBlack] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [resetKey, setResetKey] = useState(0);
+  const link = useLink();
 
-  // Commands from the presenter view (black screen, reset) arrive on their own channel.
-  useEffect(() => {
-    if (typeof BroadcastChannel === 'undefined') return;
-    const ch = new BroadcastChannel('ignite26-ctl');
-    ch.onmessage = (e: MessageEvent<{ type: 'black'; on: boolean } | { type: 'reset' }>) => {
-      if (e.data.type === 'black') setBlack(e.data.on);
-      else if (e.data.type === 'reset') setResetKey((k) => k + 1);
-    };
-    return () => ch.close();
-  }, []);
+  // Commands from the presenter view (black screen, reset): same browser or a linked device.
+  useEffect(() => onCtl((c) => { if (c.type === 'black') setBlack(c.on); else setResetKey((k) => k + 1); }), []);
 
   const toggle = (name: Exclude<Dialog, null>) => setDialog((v) => (v === name ? null : name));
   const fullscreen = () => { if (document.fullscreenElement) void document.exitFullscreen(); else void document.documentElement.requestFullscreen?.(); };
@@ -51,6 +46,7 @@ function Main() {
       case 'Escape': setDialog(null); setMenu(false); return true;
       case 'f': case 'F': fullscreen(); return true;
       case 'p': case 'P': presenter(); return true;
+      case 'd': case 'D': toggle('pair'); return true;
       case 'n': case 'N': setNotes((v) => !v); return true;
       case 'b': case 'B': setBlack(true); return true;
       case 'r': case 'R': reset(); return true;
@@ -69,6 +65,7 @@ function Main() {
     ],
     [
       { icon: 'present', label: 'Presenter view', key: 'P', run: presenter },
+      { icon: 'link', label: link.role === 'host' ? `Remote control: on${link.peers ? ` (${link.peers} linked)` : ''}` : 'Remote control: off', key: 'D', run: () => setDialog('pair') },
       { icon: 'notes', label: notes ? 'Hide presenter notes' : 'Show presenter notes', key: 'N', run: () => setNotes((v) => !v) },
       { icon: 'full', label: 'Fullscreen', key: 'F', run: fullscreen },
       { icon: 'black', label: 'Black screen', key: 'B', run: () => setBlack(true) },
@@ -94,6 +91,7 @@ function Main() {
       {menu && !hidden && <Menu groups={groups} onClose={() => setMenu(false)} />}
 
       {dialog === 'map' && <MapDialog d={d} onClose={() => setDialog(null)} onExplore={() => setDialog('explore')} />}
+      {dialog === 'pair' && <PairDialog d={d} onClose={() => setDialog(null)} />}
       {(dialog === 'explore' || dialog === 'help') && (
         <div className="overlay" onClick={() => setDialog(null)}>
           <div className="dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
@@ -139,7 +137,7 @@ function Help() {
   const rows: [string, string][] = [
     ['→  Space  Enter', 'Next step'], ['←  Backspace', 'Previous step'], ['Home / End', 'First / last slide'],
     ['1 – 6', 'Jump to a chapter'], ['T', 'Highlights / All announcements'], ['M', 'Map of every announcement and scene'],
-    ['O', 'Explore all announcements'], ['P', 'Open the presenter view in a new tab (notes, previews, timer)'], ['N', 'Show presenter notes on screen'],
+    ['O', 'Explore all announcements'], ['P', 'Open the presenter view in a new tab (notes, previews, timer)'], ['D', 'Pair a phone or tablet as a remote'], ['N', 'Show presenter notes on screen'],
     ['F', 'Fullscreen'], ['B', 'Black screen'], ['R', 'Reset this scene to its first step'], ['H', 'Hide / show the controls'], ['?', 'This help'],
   ];
   return (

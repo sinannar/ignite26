@@ -37,6 +37,11 @@ Pick **Highlights** (the short tour) or **All announcements** on the title slide
 Set the repository's Pages source to **GitHub Actions**. Pushes to `main` build
 and publish via `.github/workflows/deploy.yml`; pull requests only build.
 
-## Speaker notes
+## Presenter view and remote control
 
-Open `/speaker/` (for example `https://<user>.github.io/<repo>/speaker/`) on a phone or tablet. It is generated from `src/deck/content.ts`, is not linked from the deck and is marked `noindex`. That makes it unlisted, not private, so keep nothing sensitive in the notes. It follows the stage live only when open in the same browser as the deck; on another device, use the section chips, search and "Mark covered".
+Press `P` (or ⋯ → Presenter view) to open the presenter view in a new tab: live previews, notes, map, timer and controls.
+`/speaker/` is a short link to it.
+
+To drive the deck from a phone or tablet, press `D` on the deck to get a code and QR, then open the link on the other device.
+The two browsers connect directly (WebRTC through the free PeerJS broker, no account). Anyone with the code can control the
+deck while it is open, so share it only with your own device, and test the venue network beforehand.

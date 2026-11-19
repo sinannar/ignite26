@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { buildTimeline, type Mode, type Slide } from '../deck/timeline';
 import { chapters } from '../deck/content';
+import { onPos, sendPos } from './link';
 
 interface DeckState { mode: Mode; index: number }
 
@@ -21,7 +22,7 @@ export function useDeck() {
   const channel = useRef<BroadcastChannel | null>(null);
   const apply = useCallback((next: DeckState, broadcast = true) => {
     setState((cur) => (cur.mode === next.mode && cur.index === next.index ? cur : next));
-    if (broadcast) channel.current?.postMessage(next);
+    if (broadcast) { channel.current?.postMessage(next); sendPos(next); }
   }, []);
 
   useEffect(() => {
@@ -30,7 +31,8 @@ export function useDeck() {
     if (ch) ch.onmessage = (e: MessageEvent<DeckState>) => apply(e.data, false);
     const onHash = () => apply(parseHash(), false);
     window.addEventListener('hashchange', onHash);
-    return () => { ch?.close(); window.removeEventListener('hashchange', onHash); };
+    const off = onPos((p) => apply(p, false)); // from a linked device
+    return () => { ch?.close(); off(); window.removeEventListener('hashchange', onHash); };
   }, [apply]);
 
   useEffect(() => {
