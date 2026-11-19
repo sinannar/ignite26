@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.12" },
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
+    "validate": "tsx scripts/validate-deck.ts",
     "dev": "astro dev",
-    "check": "astro check",
-    "build": "astro build",
+    "check": "npm run validate && astro check",
+    "build": "npm run validate && astro build",
     "preview": "astro preview"
   },
   "dependencies": {
@@ -20,6 +23,8 @@
     "@astrojs/check": "^0.9.4",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "tsx": "^4.20.6",
+    "@types/node": "^22.0.0"
   }
 }

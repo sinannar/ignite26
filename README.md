@@ -9,26 +9,28 @@ Requires Node.js 22.12+.
 
 ```sh
 npm ci
-npm run dev      # dev server
-npm run check    # type-check
-npm run build    # static build into dist/
-npm run preview  # serve the build
+npm run dev       # dev server
+npm run validate  # deck content rules + coverage of news/
+npm run check     # validate + type-check
+npm run build     # validate + static build into dist/
 ```
 
-## Add content
+## How content works
 
-All content lives in `src/data/announcements.ts` (types in `src/data/types.ts`):
+- `news/*.md` holds the source material (Book of News format: `# Chapter`, `## Announcement`, links).
+- `src/deck/content.ts` holds the authored presentation: short headlines, problem / announced / why,
+  availability chips, step-by-step visuals (`flow`, `grid`, `stats`, `converge`) and presenter notes.
+- `npm run validate` checks length targets, links, and that every `news/` heading has a slide.
 
-1. Define **sections** (id, title, summary, accent colour).
-2. Add **announcements** with `section` set to a section id, plus the problem,
-   what was announced, why it matters, status, source links and presenter notes.
+To update after the source changes, follow `.agents/skills/update-presentation/SKILL.md`
+(works with any coding agent) or edit `content.ts` by hand.
 
-Slides are generated in order: title → each section divider → its announcements.
+## Presenting
 
-## Controls
-
-`→`/`Space` next · `←` previous · `G` map · `N` notes · `F` fullscreen · `?` help.
-Slides deep-link as `#/<n>`.
+Pick **Highlights** (the short tour) or **All announcements** on the title slide.
+`→`/`Space` next · `←` back · `1 2 3` jump to a chapter · `H`/`A` switch mode ·
+`G`/`O` Explore (browse everything, with links) · `P` presenter window (notes, next up, timer) ·
+`F` fullscreen · `?` help. Slides deep-link as `#/a/<n>` or `#/h/<n>`.
 
 ## Deploy
 

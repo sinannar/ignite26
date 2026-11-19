@@ -1,172 +1,163 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { Announcement, Section } from '../data/types';
+import { useEffect, useState } from 'react';
+import { announcements, chapters } from '../deck/content';
+import { Chip, cx } from './ui';
+import { SceneView, chapterOf } from './scenes';
+import { Stage } from './Stage';
+import { useDeck } from './useDeck';
 
-interface Props {
-  event: { name: string; subtitle: string };
-  sections: Section[];
-  announcements: Announcement[];
+type Dialog = 'explore' | 'help' | null;
+
+export default function Keynote() {
+  const presenter = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('presenter') === '1';
+  return presenter ? <Presenter /> : <Main />;
 }
 
-type Slide =
-  | { kind: 'title' }
-  | { kind: 'section'; section: Section; count: number }
-  | { kind: 'announcement'; section: Section; item: Announcement };
-
-type Dialog = 'map' | 'help' | null;
-
-function buildSlides(sections: Section[], announcements: Announcement[]): Slide[] {
-  const slides: Slide[] = [{ kind: 'title' }];
-  for (const section of sections) {
-    const items = announcements.filter((a) => a.section === section.id);
-    slides.push({ kind: 'section', section, count: items.length });
-    for (const item of items) slides.push({ kind: 'announcement', section, item });
-  }
-  return slides;
-}
-
-function readHash(max: number): number {
-  const n = Number(window.location.hash.replace('#/', ''));
-  return Number.isInteger(n) && n >= 0 && n <= max ? n : 0;
-}
-
-export default function Keynote({ event, sections, announcements }: Props) {
-  const slides = useMemo(() => buildSlides(sections, announcements), [sections, announcements]);
-  const last = slides.length - 1;
-  const [index, setIndex] = useState(0);
-  const [dialog, setDialog] = useState<Dialog>(null);
-  const [notes, setNotes] = useState(false);
-
-  const go = useCallback((n: number) => setIndex(Math.min(Math.max(n, 0), last)), [last]);
-
-  // Deep links: #/<slide number>
-  useEffect(() => {
-    setIndex(readHash(last));
-    const onHash = () => setIndex(readHash(last));
-    window.addEventListener('hashchange', onHash);
-    return () => window.removeEventListener('hashchange', onHash);
-  }, [last]);
-  useEffect(() => {
-    if (window.location.hash !== `#/${index}`) history.replaceState(null, '', `#/${index}`);
-  }, [index]);
-
+function useKeys(d: ReturnType<typeof useDeck>, extra: (e: KeyboardEvent) => boolean | void) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (extra(e)) return;
       switch (e.key) {
-        case 'ArrowRight': case 'PageDown': case ' ': e.preventDefault(); go(index + 1); break;
-        case 'ArrowLeft': case 'PageUp': e.preventDefault(); go(index - 1); break;
-        case 'Home': go(0); break;
-        case 'End': go(last); break;
-        case 'g': case 'G': setDialog((d) => (d === 'map' ? null : 'map')); break;
-        case '?': setDialog((d) => (d === 'help' ? null : 'help')); break;
-        case 'n': case 'N': setNotes((v) => !v); break;
-        case 'f': case 'F':
-          if (document.fullscreenElement) void document.exitFullscreen();
-          else void document.documentElement.requestFullscreen?.();
-          break;
-        case 'Escape': setDialog(null); break;
+        case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter': e.preventDefault(); d.next(); break;
+        case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': e.preventDefault(); d.prev(); break;
+        case 'Home': d.go(0); break;
+        case 'End': d.go(d.last); break;
+        case '1': case '2': case '3': d.goToChapter(Number(e.key) - 1); break;
+        case 'h': case 'H': d.setMode('h'); break;
+        case 'a': case 'A': d.setMode('a'); break;
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [go, index, last]);
+  });
+}
 
-  const slide = slides[index];
-  const accent = slide.kind === 'title' ? 'var(--accent)' : slide.section.accent;
+function Main() {
+  const d = useDeck();
+  const [dialog, setDialog] = useState<Dialog>(null);
+
+  useKeys(d, (e) => {
+    switch (e.key) {
+      case 'g': case 'G': case 'o': case 'O': setDialog((v) => (v === 'explore' ? null : 'explore')); return true;
+      case '?': setDialog((v) => (v === 'help' ? null : 'help')); return true;
+      case 'Escape': setDialog(null); return true;
+      case 'f': case 'F':
+        if (document.fullscreenElement) void document.exitFullscreen();
+        else void document.documentElement.requestFullscreen?.();
+        return true;
+      case 'p': case 'P':
+        window.open(`${window.location.pathname}?presenter=1${window.location.hash}`, 'ignite26-presenter', 'width=1100,height=760');
+        return true;
+    }
+    return dialog !== null && ['ArrowRight', 'ArrowLeft', ' ', 'Enter', 'Backspace'].includes(e.key);
+  });
+
+  const accent = chapterOf(d.slide.chapterId)?.accent ?? '#3b9cff';
+  const pct = (d.index / Math.max(d.last, 1)) * 100;
 
   return (
-    <div className="kn" style={{ ['--accent' as string]: accent }}>
-      <main className="kn-stage">
-        <div className="kn-slide">
-          {slide.kind === 'title' && (
-            <>
-              <p className="kn-kicker">{event.subtitle}</p>
-              <h1>{event.name}</h1>
-              <p className="kn-tagline">
-                {announcements.length} announcements · {sections.length} sections · press <kbd>→</kbd> to begin
-              </p>
-            </>
-          )}
+    <div className="app">
+      <Stage accent={accent}>
+        <SceneView slide={d.slide} onStart={d.start} />
+      </Stage>
 
-          {slide.kind === 'section' && (
-            <>
-              <p className="kn-kicker">Section · {slide.count} announcements</p>
-              <h1>{slide.section.title}</h1>
-              <p className="kn-tagline">{slide.section.summary}</p>
-            </>
-          )}
-
-          {slide.kind === 'announcement' && (
-            <>
-              <p className="kn-kicker">{slide.section.title}</p>
-              <h2>
-                {slide.item.title}
-                {slide.item.status && <span className="kn-badge">{slide.item.status}</span>}
-              </h2>
-              <p className="kn-tagline">{slide.item.tagline}</p>
-              <div className="kn-grid">
-                <div className="kn-card"><h3>The problem</h3><p>{slide.item.problem}</p></div>
-                <div className="kn-card"><h3>What was announced</h3><p>{slide.item.announced}</p></div>
-                <div className="kn-card"><h3>Why it matters</h3><p>{slide.item.whyItMatters}</p></div>
-              </div>
-              {slide.item.links && slide.item.links.length > 0 && (
-                <div className="kn-links">
-                  {slide.item.links.map((l) => (
-                    <a key={l.url} href={l.url} target="_blank" rel="noreferrer">{l.label} ↗</a>
-                  ))}
-                </div>
-              )}
-              {notes && slide.item.notes && <div className="kn-notes"><strong>Notes:</strong> {slide.item.notes}</div>}
-            </>
-          )}
+      <nav className="bar" aria-label="Presentation controls">
+        <button onClick={d.prev} disabled={d.index === 0} aria-label="Previous">←</button>
+        <button onClick={d.next} disabled={d.index === d.last} aria-label="Next">→</button>
+        <div className="bar-track" role="progressbar" aria-valuemin={0} aria-valuemax={d.last} aria-valuenow={d.index}>
+          <div style={{ width: `${pct}%`, background: accent }} />
         </div>
-      </main>
-
-      <nav className="kn-bar" aria-label="Presentation controls">
-        <button onClick={() => go(index - 1)} disabled={index === 0} aria-label="Previous slide">←</button>
-        <button onClick={() => go(index + 1)} disabled={index === last} aria-label="Next slide">→</button>
-        <div className="kn-progress" role="progressbar" aria-valuemin={0} aria-valuemax={last} aria-valuenow={index}>
-          <div style={{ width: `${(index / Math.max(last, 1)) * 100}%` }} />
-        </div>
-        <span className="kn-count">{index + 1}/{slides.length}</span>
-        <button onClick={() => setDialog('map')}>Map</button>
-        <button onClick={() => setDialog('help')}>?</button>
+        <span className="bar-label">{d.slide.label}</span>
+        <button className={cx(d.mode === 'h' && 'active')} onClick={() => d.setMode(d.mode === 'h' ? 'a' : 'h')} title="Toggle Highlights / All (H / A)">
+          {d.mode === 'h' ? 'Highlights' : 'All'}
+        </button>
+        <button onClick={() => setDialog('explore')}>Explore</button>
+        <button onClick={() => setDialog('help')} aria-label="Help">?</button>
       </nav>
 
       {dialog && (
-        <div className="kn-overlay" onClick={() => setDialog(null)}>
-          <div className="kn-dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-            {dialog === 'help' ? (
-              <>
-                <h2>Keyboard</h2>
-                <p><kbd>→</kbd> / <kbd>Space</kbd> next · <kbd>←</kbd> previous · <kbd>Home</kbd>/<kbd>End</kbd></p>
-                <p><kbd>G</kbd> map · <kbd>N</kbd> presenter notes · <kbd>F</kbd> fullscreen · <kbd>?</kbd> help · <kbd>Esc</kbd> close</p>
-              </>
-            ) : (
-              <>
-                <h2>All announcements</h2>
-                {sections.map((s) => (
-                  <div key={s.id}>
-                    <div className="kn-section-head">{s.title}</div>
-                    <ul className="kn-list">
-                      {slides.map((sl, i) =>
-                        sl.kind === 'announcement' && sl.section.id === s.id ? (
-                          <li key={sl.item.id}>
-                            <button aria-current={i === index} onClick={() => { go(i); setDialog(null); }}>
-                              <span className="kn-dot" style={{ background: s.accent }} />
-                              {sl.item.title}
-                            </button>
-                          </li>
-                        ) : null,
-                      )}
-                    </ul>
-                  </div>
-                ))}
-              </>
-            )}
+        <div className="overlay" onClick={() => setDialog(null)}>
+          <div className="dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+            <button className="close" onClick={() => setDialog(null)} aria-label="Close">✕</button>
+            {dialog === 'help' ? <Help /> : <Explore onPick={(id) => { d.goToAnnouncement(id); setDialog(null); }} />}
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function Explore({ onPick }: { onPick: (id: string) => void }) {
+  return (
+    <>
+      <h2>Explore all announcements</h2>
+      {chapters.map((c) => (
+        <section key={c.id} style={{ ['--accent' as string]: c.accent }}>
+          <h3 className="ex-chapter">{c.title}</h3>
+          <div className="ex-grid">
+            {announcements.filter((a) => a.chapter === c.id).map((a) => (
+              <article className="ex-card" key={a.id}>
+                <button className="ex-open" onClick={() => onPick(a.id)}>
+                  <span className="ex-name">{a.name}</span>
+                  <strong>{a.title}</strong>
+                  <span className="ex-ann">{a.announced}</span>
+                </button>
+                <div className="ex-foot">
+                  {a.statuses.map((s) => <Chip key={s} status={s} />)}
+                  {a.links.map((l) => <a key={l.url} href={l.url} target="_blank" rel="noreferrer">{l.label} ↗</a>)}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </>
+  );
+}
+
+function Help() {
+  const rows: [string, string][] = [
+    ['→  Space  Enter', 'Next step'], ['←  Backspace', 'Previous step'], ['Home / End', 'First / last slide'],
+    ['1 2 3', 'Jump to a chapter'], ['H / A', 'Highlights / All announcements'], ['G or O', 'Explore all announcements'],
+    ['P', 'Open the presenter window (notes, next up, timer)'], ['F', 'Fullscreen'], ['?', 'This help'],
+  ];
+  return (
+    <>
+      <h2>Keyboard</h2>
+      <table className="keys"><tbody>{rows.map(([k, v]) => <tr key={k}><td><kbd>{k}</kbd></td><td>{v}</td></tr>)}</tbody></table>
+    </>
+  );
+}
+
+function Presenter() {
+  const d = useDeck();
+  const [started] = useState(() => Date.now());
+  const [, tick] = useState(0);
+  useEffect(() => { const t = setInterval(() => tick((n) => n + 1), 1000); return () => clearInterval(t); }, []);
+  useKeys(d, () => false);
+
+  const secs = Math.floor((Date.now() - started) / 1000);
+  const nextSlide = d.timeline[d.index + 1];
+  const accent = chapterOf(d.slide.chapterId)?.accent ?? '#3b9cff';
+
+  return (
+    <div className="presenter" style={{ ['--accent' as string]: accent }}>
+      <header>
+        <span className="timer">{String(Math.floor(secs / 60)).padStart(2, '0')}:{String(secs % 60).padStart(2, '0')}</span>
+        <span>Slide {d.index + 1} / {d.last + 1} · step {d.slide.step}/{d.slide.steps}</span>
+        <span className="spacer" />
+        <button onClick={d.prev} disabled={d.index === 0}>← Back</button>
+        <button onClick={d.next} disabled={d.index === d.last}>Next →</button>
+      </header>
+      <main>
+        <p className="kicker">Now</p>
+        <h1>{d.slide.label}</h1>
+        <p className="notes">{d.slide.notes}</p>
+      </main>
+      <aside>
+        <p className="kicker">Next up</p>
+        <p>{nextSlide ? nextSlide.label : 'End of deck'}</p>
+      </aside>
     </div>
   );
 }

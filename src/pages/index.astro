@@ -1,6 +1,6 @@
 ---
 import Keynote from '../keynote/Keynote';
-import { announcements, event, sections } from '../data/announcements';
+import { event } from '../deck/content';
 ---
 
 <!doctype html>
@@ -8,15 +8,14 @@ import { announcements, event, sections } from '../data/announcements';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{event.name} · {event.subtitle}</title>
-    <meta name="description" content={`${event.name} announcements`} />
+    <title>{event.name} · Announcements</title>
+    <meta name="description" content={`${event.name}: an interactive walkthrough of the announcements.`} />
     <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <style is:global>
+      @import '../styles/global.css';
+    </style>
   </head>
   <body>
-    <Keynote client:load event={event} sections={sections} announcements={announcements} />
+    <Keynote client:only="react" />
   </body>
 </html>
-
-<style is:global>
-  @import '../styles/global.css';
-</style>

@@ -180,3 +180,123 @@ The SDK uses the same harness technology deployed in production across Microsoft
 
 - [Learn more about this news.](https://commandline.microsoft.com/microsoft-copilot-sdk-2-0-github/)
 
+
+# Microsoft Copilot
+As the way we work with AI has evolved, so has Microsoft Copilot. The new Copilot includes Home, the single starting point for Chat and Cowork; Auto, the smart router for Copilot that dynamically picks the right models and effort for your task, optimizing for quality, speed and cost; and Word, Excel and PowerPoint in Copilot to create and collaborate on files alongside your conversation. It also includes Code, which lets anyone build secure apps using natural language and Autopilot, a persistent, proactive agent for personal productivity. Copilot Managed Runtime securely hosts what you build in Cowork, Code and Copilot Studio. 
+
+These updates, detailed below, signal the next chapter of Copilot built for work: a connected platform where people and AI collaborate, with the context, choice and control organizations need to get more done. 
+- [Learn more about this news.](https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/)
+
+## Autopilot is rolling out to Frontier customers
+Autopilot is Microsoft’s first enterprise-grade, long-running agent for personal productivity. It will live in an organization’s tenant with its own identity, memory and access to tools, and can follow up on threads, run recurring work and continue a project without waiting for another prompt. Designed for collaboration, colleagues will be able to @mention a person’s Autopilot in a Teams channel or group chat to ask for information or request supported actions. Autopilot is designed for security: Actions it takes (even on a user’s behalf) aretied to its own agent ID and safety-checked, and it is visible and manageable by admins. Customers will be able to find Autopilot in the left navigation of the Copilot app. Autopilot is rolling out through the Frontier program.
+
+- [Learn more about this news.](https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/)
+- [Autopilot](https://www.microsoft.com/en-us/copilot/features/autopilot)
+
+
+
+## Copilot Managed Runtime is now generally available, with new capabilities
+Copilot Managed Runtime provides Microsoft-managed hosting and execution for applications, separate from where those applications are created. Builders can start with experiences, including Copilot Code, Copilot Cowork and Microsoft Copilot Studio, or use compatible third-party development tools. When an app is published to Copilot Managed Runtime, organizations gain a common way to host, run and govern it.
+
+With the general availability of Copilot Managed Runtime, Microsoft is expanding this product, giving apps built across Microsoft Copilot and compatible third-party development tools an optional data backend with services from Microsoft Fabric.
+
+With the new integration, applications that optionally need persistent data or additional backend capabilities can use Fabric as their underlying data foundation out of the box. Fabric can provide backend capabilities including database, storage and data APIs, while Copilot Managed Runtime continues to provide the application hosting and enterprise management layer.
+
+The integration brings together flexible app creation, Microsoft-managed hosting and governance and an optional Fabric data backend, allowing organizations to choose the development experience that fits their needs while providing a consistent path for running applications in their Microsoft environment.
+
+Microsoft is also announcing Agents and Workflows in Copilot Managed Runtime. The first iteration will allow users to build custom Copilot Studio agents and workflows locally, make modifications with their dev tool of choice and then publish to Copilot Studio using the CLI. This also gives developers a collaborative approach to agent development on Copilot Studio, alongside version control through platforms like GitHub.
+
+- [Learn more about this news.](https://techcommunity.microsoft.com/blog/copilot-managed-runtime-blog/copilot-managed-runtime-is-now-generally-available-with-additional-new-preview-f/4571846)
+
+
+## Copilot Workspaces helps teams work together with Copilot
+Copilot Workspaces brings teams, their work and Copilot together in a shared space in the Microsoft Copilot app. As the evolution of Copilot Notebooks, Workspaces helps teams turn shared context into shared progress on an ongoing workstream.
+
+Work IQ can suggest relevant workspaces based on current workstreams to help people get started quickly. Once in a workspace, team members can work together on shared documents while Copilot connects the dots across the work, surfacing what changed, what remains unresolved and which actions need attention so everyone can quickly catch up and keep the work moving. And coming soon, teams will be able to bring their personal Autopilot into Workspaces, so humans and agents can collaborate in one space and team members can shift from doing the work to directing it.
+
+Copilot Workspaces is available in the Copilot app through the Frontier program.
+
+- [Learn more about this news.](https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/)
+
+
+## Easily build secure apps with Copilot Code
+Copilot Code will empower everyone to build dashboards, trackers and apps with natural language, using the same agentic technology as GitHub Copilot. Cloud projects will run in a secure sandbox, stay within your tenant and are easy to share internally and take on the go with iOS and Android. A new local sandbox will extend those protections to people’s devices, limiting what Code and everything it runs can read, write and access on the network.
+
+IT will be able to stay in control. Supported apps will be able to be published through Copilot Managed Runtime, extending existing Microsoft 365 identity, security and governance controls, with apps visible and managed in the Microsoft 365 admin center.
+
+Copilot Code is available in the Frontier program on Windows, web, iOS and Android, with local sandbox available on Windows and coming soon to macOS. Copilot Code will be generally available in December.
+
+- [Learn more about this news.](https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/)
+
+## TODAY helps people prioritize and act on what matters
+TODAY is a new experience in the Microsoft Copilot app and Outlook that will help people stay on top of their work by surfacing key priorities and proactively preparing next steps.
+
+TODAY will bring together information from across emails, calendars, chats and meetings to create a personalized view of what needs attention. It will also proactively prepare work, including email drafts, chat messages and scheduling changes, for users to review and approve. 
+
+The experience includes two capabilities: 
+- TODAY Brief will provide a personalized morning briefing that highlights priorities and prepares next steps, helping users start their day caught up and ready to act. This daily refresh is included with a Microsoft 365 Copilot license. 
+- TODAY Feed will build on the morning briefing by automatically refreshing throughout the day as new emails, messages and meetings come in, helping users stay on top of shifting priorities as the day unfolds. Recurring updates throughout the day require Copilot credits.
+
+TODAY will begin rolling out in private preview through the Frontier program. 
+
+- [Learn more about this news.](https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/)
+
+
+# Microsoft IQ
+Microsoft believes that AI should amplify customers’ business advantage. Today, Microsoft IQ is expanding to be a complete enterprise context management platform.
+
+Microsoft IQ brings together the data, knowledge, expertise and proven ways of working that make every organization distinctive and is putting that intelligence to work across apps and agents. New features provide a governed home to reuse skills, tools and agents across teams with business plugins. Enhanced context management capabilities connect agents to work, business data, unstructured content and real-world knowledge through Work IQ, Fabric IQ, Foundry IQ and Web IQ, with continuous improvement provided by Microsoft Foundry.
+
+Together, these updates help organizations retain, apply and grow their own IQ, so what they build today becomes the foundation for what they build next.
+
+## Introducing Microsoft IQ, the platform for enterprise AI
+Microsoft IQ, now generally available, puts customers’ intelligence to work in the apps and agents that they build, so teams can reuse what works and preserve what they learn as models, tools and business needs change. Each improvement adds to the customer’s IQ, giving future work a stronger starting point. Microsoft IQ brings together two capabilities:
+- Enterprise context management connects agents to how people work, business data, unstructured content and real-world information through Work IQ, Fabric IQ, Foundry IQ and Web IQ, along with reusable business plugins, skills, tools and agents. Business plugins organize that context and expertise for each scenario.
+- Continuous improvement in Microsoft Foundry connects evaluations and production insights to agent optimization and model training, enabling significantly improved customer outcomes.
+
+The new Microsoft IQ is built on products customers already use, with no new SKU or subscription. Together with Microsoft Agent 365 for governance, it helps customers retain, apply and grow their IQ as they extend applications, adopt new models and improve agents.
+
+- [Learn more about this news.](https://azure.microsoft.com/en-us/blog/introducing-the-new-microsoft-iq-putting-your-organizations-intelligence-to-work-in-every-agent/)
+
+
+## Foundry IQ brings unstructured data to applications and agents
+Foundry IQ helps developers put unstructured data to work in both traditional application search and agentic workloads. It combines keyword, vector and hybrid search with semantic ranking for search-driven applications and agentic retrieval that plans and iterates across knowledge sources for more complex questions. New capabilities deepen how applications and agents find and connect information:
+- Knowledge graphs (in preview) will connect entities and relationships across documents and organize content into topics. Agents will be able to trace connections from a regulation through suppliers to affected products, citing supporting sources. Topic-based retrieval will help answer broader questions across a collection, such as themes running through a set of contracts.
+- Microsoft-Retriever-1 (in preview), a new retrieval model, will run iterative search and query planning for faster, more efficient grounding.
+- A Foundry IQ resource in every new Foundry project (in preview) will provide grounding from day 1 on a usage-based, serverless plan.
+- The SharePoint indexed knowledge source is now generally available, bringing SharePoint content into Foundry IQ retrieval so applications and agents can find relevant information while respecting source permissions.
+
+These updates help developers build search experiences and agents that can retrieve relevant content, follow relationships across documents and ground responses in organizational data.
+
+- [Learn more about this news.](https://azure.microsoft.com/en-us/blog/introducing-the-new-microsoft-iq-putting-your-organizations-intelligence-to-work-in-every-agent/)
+
+
+## Web IQ now generally available to Azure customers
+Web IQ is now generally available to all Azure customers, making it easier for developers to bring fresh, relevant knowledge from across the web into AI agents and applications at a new, lower price. Web IQ connects real-world knowledge — from web pages, news, images, videos and more — with specialized data to expand what agents know beyond their underlying models and business data, so they can deliver better answers and actions. Other updates include:
+- Auto mode in Web IQ makes it simpler to bring the right real-world knowledge into agents.Instead of requiring developers to select and orchestrate individual APIs, Auto mode brings Web, Images, Videos, News and the new Places and Weather categories together in a single, fast and cost-effective experience. This reduces the work required to build web grounding into an application while helping agents retrieve relevant external context for their responses. Now generally available.
+- Web IQ Auto Advanced improves retrieval for more complex questions.When an initial result is not sufficient, Auto Advanced can evaluate the response, refine the query and retrieve additional information. This gives developers a way to improve results for demanding scenarios without building that iterative retrieval logic themselves. Now generally available.
+- Web IQ Scopes gives organizations greater control over the web content their AI agents can access. This lets developers and enterprise administrators include or exclude specific URLs, domains, sites and paths when grounding AI responses. Now generally available.
+- Specialized knowledge domains feature three new data categories. Web IQ Places provides intelligence on 207.5 million real-world entities tohelp customers build location-aware experiences faster, improve local discovery and recommendations, and reduce the effort to maintain place data. Web IQ Weather brings Microsoft’s weather intelligence directly into AI agents to help customers build weather-aware experiences faster, improve planning and recommendations, and respond to changing conditions. Web IQ Places and Web IQ Weather are generally available. Web IQ Commerce will give AI shopping agents structured product data across more than 40 billion listings. Product IDs, images, descriptions, pricing, availability and multi-merchant offers will help agents compare products and deliver faster, higher-quality recommendations at scale. Web IQ Commerce is in private preview.
+- Healthcare enhancements to Web IQ help organizations build better health agents and other AI experiences with credible, cited health evidence. A new health-aware ranking uses source credibility signals, informed by principles established independently by the National Academy of Medicine in the US, to surface credible health sources ahead of forums and blogs. It runs on the Web IQ API with no new integration or separate SKU needed. Generally available.
+
+- [Learn more about this news.](https://blogs.bing.com/webiq/2026/11/web-iq-is-now-broadly-available-build-better-agents-that-keep-up-with-the-world/)
+
+
+# Security
+As AI agents move from answering questions to taking action, security becomes the foundation for trust. Microsoft Perception is now generally available, bringing specialized security agents and playbooks together to investigate threats and strengthen defenses. New agent governance and security capabilities across Agent 365, Microsoft Entra, Intune, Defender and Purview give organizations greater visibility and control over agents, their identities, tools, access and data.
+
+Together, these updates and the ones below help organizations establish trust at every layer of the agentic enterprise, giving people and agents the freedom to act with the security, control and accountability organizations need.
+
+## Codename MDASH, a new agentic code security system, available in preview
+Codename MDASH, Microsoft’s agentic code security system, is in preview for eligible organizations. It adds new capabilities that will help security and engineering teams work from validated findings. Advances in AI models are changing how vulnerabilities are discovered and exploited.
+
+Codename MDASH uses more than 100 specialized AI agents in a four-stage pipeline. It will map the attack surface, scan code, validate findings through agent debate, remove duplicates and, where possible, reproduce findings with a triggering input.
+
+New capabilities for Codename MDASH include:
+- Quality improvements: Reduces low-quality results and false positives, so teams can spend less time triaging and more time on actionable vulnerabilities.
+- Repository sharding: Analyzes large repositories by partitioning codebases into logical units, using fewer tokens per scan.
+- Progress visibility: Makes scan stages, completed work, elapsed time and result availability more visible to better understand scan progress.
+- Broader MAI Cyber model support: Codename MDASH now supports more of the MAI Cyber model family, including MAI Cyber 1.1 Flash, and will use MAI-Cyber-2 once evaluation testing is complete, improving efficiency while maintaining the quality of security findings.
+
+- [Learn more about this news.](https://techcommunity.microsoft.com/blog/perception-blog/whats-new-with-microsoft-perception-at-ignite-2026/4571834)
+
